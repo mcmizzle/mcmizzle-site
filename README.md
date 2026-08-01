@@ -19,23 +19,17 @@ is where they live once the domain/hosting below are set up.
 
 Add a new folder per app (e.g. `calorieburndown/`) as each one launches.
 
-## What's still needed before this is live (see AmbientCast#59)
+## Status (see AmbientCast#59)
 
-- [ ] Buy `mcmizzle.com`
-- [ ] Point its DNS at GitHub Pages (an `A`/`ALIAS` record for the apex
-      domain to GitHub Pages' IPs, or a `CNAME` record if using `www`) —
-      see [GitHub's custom domain docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site)
-      when ready. **Then** add a `CNAME` file back to this repo's root
-      containing just `mcmizzle.com` (deliberately left out for now — with
-      no domain yet, a `CNAME` file makes GitHub Pages redirect the default
-      `mcmizzle.github.io/mcmizzle-site/` preview URL to a domain that
-      doesn't resolve, breaking the only way to preview this before the
-      domain exists).
-- [ ] Set up `support@mcmizzle.com` (currently a placeholder on the support
-      page)
-- [ ] Once live, update AmbientCast's `docs/APP_STORE_LISTING.md` Support/
-      Privacy URLs from the interim GitHub placeholders to
-      `https://mcmizzle.com/ambientcast/` / `https://mcmizzle.com/privacy/`
+Live as of August 2026: `mcmizzle.com` purchased on Porkbun, DNS pointed at
+GitHub Pages (A/AAAA records + `www` CNAME, verified across all 4
+authoritative nameservers), HTTPS cert authorized, `CNAME` file in this repo
+set to `mcmizzle.com`. `support@mcmizzle.com` forwards to Kevin's inbox via
+Porkbun email forwarding. AmbientCast's `docs/APP_STORE_LISTING.md` points
+at the real `mcmizzle.com/support/` / `mcmizzle.com/privacy/` URLs.
+
+`mcmizzle.net` is also purchased, set up as a redirect to `.com` via
+Porkbun's URL forwarding (not hosted separately here).
 
 ## Local preview
 
