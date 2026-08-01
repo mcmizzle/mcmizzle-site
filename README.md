@@ -1,7 +1,8 @@
 # mcmizzle-site
 
 The McMizzle marketing/support site — plain static HTML/CSS, no build step,
-deployed via GitHub Pages straight from `main`.
+deployed via GitHub Pages straight from `main`. Warm cream/terracotta visual
+identity (see `assets/style.css`), with light/dark variants throughout.
 
 Built to unblock [AmbientCast#57](https://github.com/mcmizzle/AmbientCast/issues/57)
 and [AmbientCast#59](https://github.com/mcmizzle/AmbientCast/issues/59): App
@@ -16,6 +17,19 @@ is where they live once the domain/hosting below are set up.
   McMizzle operates, since there isn't one)
 - `support/` — support contact info, per app
 - `ambientcast/` — AmbientCast's app page
+- `404.html` — branded 404, picked up automatically by GitHub Pages for any
+  unmatched URL
+- `robots.txt` — allows all crawlers; no sitemap, since the site is only a
+  handful of pages
+- `assets/style.css` — the one shared stylesheet for every page
+- `assets/favicon.png`, `favicon-16.png`, `apple-touch-icon.png` — site
+  favicon/home-screen icon, a cream "M" monogram on the terracotta accent
+  color, generated with Pillow (see git history for the generation script)
+- `assets/og-image.png` — 1200×630 Open Graph/Twitter card preview image,
+  same monogram, referenced by every real page's `og:image` meta tag
+
+Every real page (not `404.html`) also carries `rel=canonical`,
+`theme-color` (light/dark), and Open Graph/Twitter card meta tags.
 
 Add a new folder per app (e.g. `calorieburndown/`) as each one launches.
 
@@ -33,5 +47,12 @@ Porkbun's URL forwarding (not hosted separately here).
 
 ## Local preview
 
-No build step — just open `index.html` in a browser, or serve the directory
-with anything static (e.g. `python3 -m http.server`).
+No build step, but **serve the directory over HTTP rather than opening
+`index.html` directly as a `file://` URL** — every page links
+`/assets/style.css` with a root-relative path, which only resolves under
+`file://` if `/assets/style.css` happens to exist at your filesystem root.
+Opening the file directly loads the page with no styling at all and no
+console error explaining why. Serve it with anything static instead, e.g.
+`python3 -m http.server`, then open `http://localhost:8000/`. This only
+affects local preview — GitHub Pages serves everything from the domain
+root, so the same paths resolve correctly once deployed.
