@@ -17,6 +17,7 @@ is where they live once the domain/hosting below are set up.
   McMizzle operates, since there isn't one)
 - `support/` — support contact info, per app
 - `ambientcast/` — AmbientCast's app page
+- `calorieburndown/` — Calorie Burndown's app page
 - `404.html` — branded 404, picked up automatically by GitHub Pages for any
   unmatched URL
 - `robots.txt` — allows all crawlers; no sitemap, since the site is only a
@@ -31,7 +32,7 @@ is where they live once the domain/hosting below are set up.
 Every real page (not `404.html`) also carries `rel=canonical`,
 `theme-color` (light/dark), and Open Graph/Twitter card meta tags.
 
-Add a new folder per app (e.g. `calorieburndown/`) as each one launches.
+Add a new folder per app as each one launches.
 
 ## Status (see AmbientCast#59)
 
@@ -41,6 +42,11 @@ authoritative nameservers), HTTPS cert authorized, `CNAME` file in this repo
 set to `mcmizzle.com`. `support@mcmizzle.com` forwards to Kevin's inbox via
 Porkbun email forwarding. AmbientCast's `docs/APP_STORE_LISTING.md` points
 at the real `mcmizzle.com/support/` / `mcmizzle.com/privacy/` URLs.
+
+Both AmbientCast and Calorie Burndown were submitted to Apple App Review on
+2026-08-02; the homepage no longer shows a "Coming soon" badge for Calorie
+Burndown, and it has its own `calorieburndown/` page mirroring
+`ambientcast/`'s.
 
 `mcmizzle.net` is also purchased, set up as a redirect to `.com` via
 Porkbun's URL forwarding (not hosted separately here).
