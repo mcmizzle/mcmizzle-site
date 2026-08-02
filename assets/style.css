@@ -128,17 +128,6 @@ a {
   font-size: 0.95rem;
 }
 
-.app-list .coming-soon {
-  display: inline-block;
-  margin-top: 0.3rem;
-  color: var(--accent);
-  font-size: 0.75rem;
-  font-weight: 700;
-  background: var(--accent-soft);
-  padding: 0.15rem 0.55rem;
-  border-radius: 999px;
-}
-
 footer {
   max-width: var(--max-width);
   margin: 3rem auto 0;
