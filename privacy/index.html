@@ -23,7 +23,7 @@
 <header class="site-header"><a class="home-link" href="/">McMizzle</a></header>
 <main>
   <h1>Privacy Policy</h1>
-  <p class="tagline">Last updated: August 1, 2026. Applies to every McMizzle app, including AmbientCast and Calorie Burndown.</p>
+  <p class="tagline">Last updated: August 4, 2026. Applies to every McMizzle app, including AmbientCast and Calorie Burndown.</p>
 
   <p>
     The short version: your data stays on your own devices. None of it passes
@@ -71,6 +71,59 @@
     AmbientCast to Bambu Lab's cloud or YouTube for optional live
     streaming), that portion of your data is governed by that service's own
     privacy policy — not this one.
+  </p>
+
+  <h2 id="ambientcast-google">Google user data (AmbientCast's optional YouTube Live feature)</h2>
+  <p>
+    This section exists specifically to satisfy Google API Services User
+    Data Policy disclosure requirements for AmbientCast's optional YouTube
+    Live broadcasting feature.
+  </p>
+  <p>
+    <strong>What's requested and why.</strong> When you turn on YouTube Live
+    in AmbientCast's Settings and sign in, it requests the single OAuth
+    scope <code>https://www.googleapis.com/auth/youtube</code> — the
+    narrowest scope Google's device-flow sign-in (used because tvOS has no
+    in-app browser for a standard OAuth redirect) permits for YouTube at
+    all; the read-only <code>youtube.readonly</code> scope isn't sufficient
+    because the app needs to create and manage a broadcast, not just read
+    your channel. With that scope, AmbientCast only ever calls:
+  </p>
+  <ul>
+    <li><code>liveBroadcasts.insert</code> / <code>.bind</code> /
+      <code>.transition</code> — to create a live broadcast on your own
+      channel and start/stop it, only when you tap the record button (or
+      the optional auto-start-with-print-jobs setting fires).</li>
+    <li><code>liveStreams.insert</code> — to create the ingest endpoint
+      AmbientCast's own RTMP relay pushes your printer's camera feed to.</li>
+    <li><code>thumbnails.set</code> — to set the finished broadcast's
+      thumbnail to a still frame of your own completed print, once, when a
+      broadcast you started ends.</li>
+  </ul>
+  <p>
+    Nothing else on your YouTube account is ever read, listed, or modified —
+    no other videos, playlists, subscriptions, comments, or channel
+    settings. Every one of these calls is a direct consequence of a
+    broadcast you personally started; AmbientCast never creates, modifies,
+    or ends a broadcast on its own.
+  </p>
+  <p>
+    <strong>Data protection.</strong> Your OAuth access and refresh tokens
+    are stored in your device's Keychain, on-device only, encrypted at rest
+    by iOS/tvOS's standard Keychain protection. They're never sent anywhere
+    except directly to Google's own token and YouTube Data API endpoints,
+    and never to any server McMizzle operates.
+  </p>
+  <p>
+    <strong>Retention and deletion.</strong> Your OAuth tokens stay in your
+    device's Keychain only until you either sign out of YouTube from
+    AmbientCast's Settings (which deletes them immediately, on-device) or
+    revoke AmbientCast's access directly from Google at
+    <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>
+    (which invalidates them on Google's side even if the local copy hasn't
+    been cleared yet). No copy of these tokens, or of anything read/written
+    using them, is ever retained anywhere off your device — there is no
+    McMizzle-operated server for any of it to be retained on.
   </p>
 
   <h2>Contact</h2>
