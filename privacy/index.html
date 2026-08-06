@@ -23,7 +23,7 @@
 <header class="site-header"><a class="home-link" href="/">McMizzle</a></header>
 <main>
   <h1>Privacy Policy</h1>
-  <p class="tagline">Last updated: August 4, 2026. Applies to every McMizzle app, including AmbientCast and Calorie Burndown.</p>
+  <p class="tagline">Last updated: August 6, 2026. Applies to every McMizzle app, including AmbientCast and Calorie Burndown.</p>
 
   <p>
     The short version: your data stays on your own devices. None of it passes
@@ -69,8 +69,12 @@
   <p>
     Where a McMizzle app connects to a service on your behalf (e.g.
     AmbientCast to Bambu Lab's cloud or YouTube for optional live
-    streaming), that portion of your data is governed by that service's own
-    privacy policy — not this one.
+    streaming), what that service then does with your data on its own side
+    is governed by that service's own privacy policy, not this one. How the
+    McMizzle app itself requests, uses, stores, and deletes that data is
+    covered here — see
+    <a href="#ambientcast-google">Google user data</a> below for the full
+    account of AmbientCast's YouTube Live feature.
   </p>
 
   <h2 id="ambientcast-google">Google user data (AmbientCast's optional YouTube Live feature)</h2>
@@ -110,9 +114,11 @@
   <p>
     <strong>Data protection.</strong> Your OAuth access and refresh tokens
     are stored in your device's Keychain, on-device only, encrypted at rest
-    by iOS/tvOS's standard Keychain protection. They're never sent anywhere
-    except directly to Google's own token and YouTube Data API endpoints,
-    and never to any server McMizzle operates.
+    by iOS/tvOS's standard Keychain protection. In transit they are sent
+    only over encrypted HTTPS/TLS connections, and only ever directly to
+    Google's own token and YouTube Data API endpoints — never to any server
+    McMizzle operates, because there isn't one. No McMizzle employee or
+    system can read them, since they exist nowhere McMizzle can reach.
   </p>
   <p>
     <strong>Retention and deletion.</strong> Your OAuth tokens stay in your
@@ -124,6 +130,20 @@
     been cleared yet). No copy of these tokens, or of anything read/written
     using them, is ever retained anywhere off your device — there is no
     McMizzle-operated server for any of it to be retained on.
+  </p>
+  <p>
+    <strong>Limited Use.</strong> AmbientCast's use of information received
+    from Google APIs adheres to the
+    <a href="https://developers.google.com/terms/api-services-user-data-policy">Google
+    API Services User Data Policy</a>, including its
+    <a href="https://developers.google.com/terms/api-services-user-data-policy#additional_requirements_for_specific_api_scopes">Limited
+    Use</a> requirements. Specifically, Google user data is used only to
+    provide the YouTube Live broadcasting feature described above; it is
+    never transferred to others except as necessary to provide that feature
+    (which, since there is no McMizzle server, means it is never transferred
+    at all), never used for advertising, never used to build profiles or for
+    any purpose other than the one you invoked it for, and never read by
+    humans.
   </p>
 
   <h2>Contact</h2>
