@@ -338,6 +338,19 @@ something from you.
 Length: 120–250 words. Long enough to carry the story, short enough to read
 standing up.
 
+**Never hard-wrap text inside the fenced blocks in `SOCIAL.md`.** Everywhere
+this copy is going — LinkedIn's composer, the Apple Developer Forums editor —
+preserves the line breaks you paste and does its own wrapping. Prose wrapped
+at 76 characters arrives with a break every 76 characters and looks broken.
+One paragraph per line, blank lines between paragraphs, lines as long as they
+need to be. This is the one place in this repo where long lines are correct.
+
+Code and log samples are the exception: keep their breaks and indentation,
+because there the breaks carry meaning.
+
+The same applies to any other paste-buffer added here later — forum replies,
+Reddit comments, dev.to cross-posts.
+
 ## Record what you passed on
 
 `blog/CONSIDERED.md` is the running record of topics that were weighed and
