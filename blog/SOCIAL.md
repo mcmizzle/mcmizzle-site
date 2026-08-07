@@ -33,8 +33,9 @@ not running at all, ours was a running extension whose output never reached
 the screen. Those may be different bugs. Say so rather than implying a fix.
 
 ```
-Late to this thread, but it still bites in 2026 (tvOS 17, Apple TV 4K), and
-I don't think the caching angle has come up.
+Late to this thread, but it still bites in 2026 — deployment target tvOS 17,
+observed on an Apple TV 4K running the current tvOS beta — and I don't think
+the caching angle has come up.
 
 Something a reboot does that reinstalling doesn't: the Home screen process
 caches the *rendered* Top Shelf tile and dedupes incoming content against
