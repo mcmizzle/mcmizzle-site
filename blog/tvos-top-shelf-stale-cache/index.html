@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your tvOS Top Shelf tile is cached, and reinstalling won't clear it — McMizzle</title>
+<meta name="description" content="The Top Shelf kept drawing a placeholder image for hours after the code was correct. The system caches the rendered tile, dedupes on content, and survives an uninstall.">
+<link rel="canonical" href="https://mcmizzle.com/blog/tvos-top-shelf-stale-cache/">
+<link rel="alternate" type="application/rss+xml" title="McMizzle Blog" href="https://mcmizzle.com/blog/feed.xml">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdf6ec">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#201a13">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mcmizzle.com/blog/tvos-top-shelf-stale-cache/">
+<meta property="og:title" content="Your tvOS Top Shelf tile is cached, and reinstalling won't clear it — McMizzle">
+<meta property="og:description" content="The Top Shelf kept drawing a placeholder image for hours after the code was correct. The system caches the rendered tile, dedupes on content, and survives an uninstall.">
+<meta property="og:image" content="https://mcmizzle.com/assets/og-image.png">
+<meta property="article:published_time" content="2026-08-03">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<header class="site-header"><a class="home-link" href="/">McMizzle</a></header>
+<main>
+<article class="post">
+  <h1>Your tvOS Top Shelf tile is cached, and reinstalling won't clear it</h1>
+  <p class="post-meta">Kevin McMahon · August 3, 2026</p>
+
+  <p>
+    The Top Shelf tile for my tvOS app started rendering a dark placeholder
+    instead of its artwork. Everything else about the tile was fine: the title
+    line was correct and current, and the progress indicator tracked the real
+    job percentage. Only the image was missing. I spent an evening on it, wrote
+    two fixes that were both wrong, and the thing that eventually worked was
+    rebooting the Apple TV.
+  </p>
+
+  <p>
+    That is an unsatisfying ending, so let me give you the useful version up
+    front: <strong>the system caches the rendered Top Shelf tile, dedupes
+    incoming content against that cache, and the cache survives uninstalling
+    and reinstalling your app.</strong> If you have shipped even one build that
+    handed the Top Shelf a bad item, you can spend hours looking at correct code
+    that produces a wrong screen. Nothing about the symptom suggests a cache,
+    which is exactly why it costs so much time.
+  </p>
+
+  <h2>What I ruled out first, and why it wasn't enough</h2>
+
+  <p>
+    This was a <code>TVTopShelfContentProvider</code> returning a single
+    <code>TVTopShelfSectionedItem</code> with <code>imageShape = .hdtv</code>,
+    built against a tvOS 17 deployment target and observed on a physical Apple
+    TV 4K. Before changing anything I checked the obvious candidates, all on
+    device:
+  </p>
+
+  <ul>
+    <li>
+      <strong>Was the extension crashing?</strong> No — no crash reports for it
+      at all. You can pull every crash log off a tethered Apple TV with
+      <code>devicectl device copy from --domain-type systemCrashLogs</code>,
+      which is a fast way to answer "is this thing dying or just rendering
+      wrong?"
+    </li>
+    <li>
+      <strong>Was the data stale?</strong> No. The extension reads a snapshot
+      the app writes into a shared App Group. I pulled that container off the
+      device and decoded it, and it was current.
+    </li>
+    <li>
+      <strong>Were the images actually in the built <code>.appex</code>?</strong>
+      Yes, both of them, at 400×225 and 800×450.
+    </li>
+    <li>
+      <strong>Was the extension even running?</strong> Yes, and this is the
+      clue I misread. The tile's title and progress bar matched the live state,
+      so the extension was running, reading its snapshot, building its item,
+      and returning it. Only the image was absent.
+    </li>
+  </ul>
+
+  <p>
+    That last point felt like it narrowed things down enormously. If the item
+    renders, the extension works; if the image alone is missing, the bug must be
+    in the image. That reasoning is what sent me off in the wrong direction,
+    because it assumes the tile on screen was rendered from the item I was
+    currently returning. It wasn't.
+  </p>
+
+  <h2>Getting logs out of a Top Shelf extension</h2>
+
+  <p>
+    Before anything else got better, this did, and it's worth its own section
+    because it applies to any tvOS extension.
+  </p>
+
+  <p>
+    <code>print()</code> from a Top Shelf extension reaches nobody. It goes to
+    stdout, and nothing is attached to that process on a real Apple TV — the
+    extension runs on the system's schedule when the Home screen wants content,
+    which is precisely when you are not sitting in Xcode with a debugger
+    attached. There is also no command-line path to a physical device's logs;
+    <code>log stream</code> has no device flag.
+  </p>
+
+  <p>
+    What works is <code>os.Logger</code> at <code>.notice</code>, read in
+    Console.app with the Apple TV tethered. Not <code>.debug</code> — debug-level
+    messages aren't persisted by default, so they'll be missing from exactly the
+    capture you bothered to collect. Use <code>privacy: .public</code> on any
+    interpolation you actually want to read, or you'll get
+    <code>&lt;private&gt;</code> where the answer should be.
+  </p>
+
+<pre><code>let log = Logger(subsystem: "com.example.app", category: "TopShelf")
+
+let path = url.path
+log.notice("""
+    image=\(path, privacy: .public) \
+    exists=\(FileManager.default.fileExists(atPath: path), privacy: .public) \
+    readable=\(FileManager.default.isReadableFile(atPath: path), privacy: .public)
+    """)
+</code></pre>
+
+  <p>
+    Logging whether the file exists <em>and is readable from this process</em>
+    was the specific thing I needed. If the path is readable from the extension
+    and the tile still shows a placeholder, then either the rendering process
+    can't reach it from its own sandbox or it's rejecting the image after
+    reading it — two problems with completely different fixes, and no way at all
+    to tell them apart from a screenshot.
+  </p>
+
+  <h2>Two things I believed about App Groups on tvOS that were wrong</h2>
+
+  <p>
+    My first fix was to copy the images out of the extension's bundle and into
+    the App Group container, on the theory that a path inside an
+    <code>.appex</code> isn't reachable from the system process that draws the
+    shelf. That fix didn't work, so I concluded that App Groups on tvOS share
+    <code>UserDefaults</code> and nothing else — that
+    <code>containerURL(forSecurityApplicationGroupIdentifier:)</code> just
+    returns nil there. I wrote that in a comment. It is false, and the device log
+    says so plainly:
+  </p>
+
+<pre><code>container_create_or_lookup_app_group_path_by_app_group_identifier: success
+</code></pre>
+
+  <p>
+    The container resolves fine. What's refused is <em>writing</em> to it from an
+    extension:
+  </p>
+
+<pre><code>Sandbox: MyTopShelfExtension deny(1) file-write-create
+    /private/var/.../Shared/AppGroup/&lt;uuid&gt;/Library/TopShelfImage@1x.png
+</code></pre>
+
+  <p>
+    That surfaces in Swift as <code>NSCocoaErrorDomain</code> 513. So the real
+    rule is: an app extension can <em>read</em> the shared container but cannot
+    <em>create files</em> in it, while the containing app can do both. If you
+    need something dynamic on the shelf, the app writes it and the extension
+    only reads it.
+  </p>
+
+  <p>
+    Worse, my failed copy didn't fall back. It returned nil for both image URLs
+    when the copy failed, so several builds went to the device handing the system
+    <code>image1x=nil image2x=nil</code> — guaranteeing the blank tile the change
+    was supposed to fix. Remember that; it's the whole ending.
+  </p>
+
+  <h2>The log line that explains the rest</h2>
+
+  <p>
+    With the images back to plain bundle URLs and the log showing good paths
+    going out, the tile still drew a placeholder. Then this turned up:
+  </p>
+
+<pre><code>Skipping content update for [com.example.app] because it is unchanged
+</code></pre>
+
+  <p>
+    The Home screen process dedupes fetched content against its cached model. My
+    item identifier was a constant string, and with the printer parked on the
+    same status, a <em>corrected</em> item was indistinguishable from the cached
+    one. A fix to the image alone could never reach the screen, because from the
+    system's point of view nothing had changed.
+  </p>
+
+  <p>
+    That's a genuine trap independent of everything else here, and the fix is
+    cheap — derive the identifier from the content you're rendering:
+  </p>
+
+<pre><code>// Before: a constant. A corrected item looks identical to the cached one.
+let item = TVTopShelfSectionedItem(identifier: "current-item")
+
+// After: identity varies with what's actually in the item.
+let identity = [title, state, imageURL?.path ?? "no-image"].joined(separator: "|")
+let item = TVTopShelfSectionedItem(identifier: "current-item-\(identity)")
+</code></pre>
+
+  <p>
+    Including the image path is deliberate: a bundle path embeds a UUID that
+    changes on every install, so a reinstall always produces a fresh identifier.
+  </p>
+
+  <p>
+    One trap on the way there, which I walked straight into: don't run that
+    string through <code>hashValue</code>. Swift seeds <code>Hashable</code>
+    with a value chosen randomly per process, and the documentation is explicit
+    that hash values "are not guaranteed to be equal across different
+    executions of your program." The Top Shelf extension gets launched fresh
+    every time the system wants content, so
+    <code>identity.hashValue</code> yields a different number on every run
+    whether or not anything in the item changed. It does defeat the dedupe —
+    but for a reason that has nothing to do with the content, which makes the
+    identity string you just assembled pure decoration. Worse, it's the kind of
+    accident that stops being true the moment someone swaps in a stable hash
+    and quietly restores the caching you were trying to escape. Use the string
+    itself; identifiers are not required to be short.
+  </p>
+
+  <p>
+    And it still didn't fix it. Good paths, fresh identifier, placeholder tile.
+  </p>
+
+  <h2>What actually cleared it</h2>
+
+  <p>
+    Rebooting the Apple TV. Instantly, with no code change.
+  </p>
+
+  <p>
+    The cached rendering was one built while my own commits were returning nil
+    image URLs. Once the Home screen had cached a model with no images, nothing
+    displaced it: not a corrected build, not a changed item identifier, not
+    uninstalling and reinstalling the app. It kept faithfully drawing a tile from
+    builds ago for hours, while every diagnostic I could run said the current
+    code was correct — which it was.
+  </p>
+
+  <p>
+    One honest caveat, because it's the part I can't close: my nil-URL commits
+    explain why it stayed broken all evening, but the tile was already showing a
+    placeholder before I wrote them, which is why I opened the bug in the first
+    place. I never isolated what poisoned the cache originally. The most I can
+    say is that it was a day of repeated installs, and that a reboot cleared
+    whatever it was.
+  </p>
+
+  <h2>What I'd tell you to check first</h2>
+
+  <p>
+    If a Top Shelf change doesn't seem to take effect, <strong>reboot the device
+    before you doubt the code.</strong> It costs a minute. Doubting the code cost
+    me an evening and produced two commits that made things worse.
+  </p>
+
+  <p>
+    The general shape is worth carrying past tvOS. I had a cache I didn't know
+    existed, sitting between correct code and a wrong screen, and every
+    instrument I had was pointed at the code. All my logging measured what the
+    extension <em>sent</em>. Nothing measured what the system <em>drew</em>, and
+    the two had quietly stopped being the same thing. When a fix that should work
+    changes nothing at all — not the symptom, not even its shape — stop refining
+    the fix and start asking whether your output is reaching the renderer.
+  </p>
+
+  <p>
+    And when you're debugging blind, don't let a broken build ship a null. A
+    fallback that returns yesterday's correct value is annoying. A null gets
+    cached somewhere you can't see, and then you're debugging your own debugging.
+  </p>
+</article>
+<nav class="post-nav"><a href="/blog/">← All posts</a></nav>
+</main>
+<footer>
+  &copy; 2026 Kevin McMahon (McMizzle)
+</footer>
+</body>
+</html>
