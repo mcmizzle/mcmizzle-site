@@ -126,9 +126,9 @@ let query = HKStatisticsQuery(
   </p>
 
   <p>
-    So the overnight sequence was: wake while locked, fail four reads, coerce all
-    four to zero, compute a day in which nothing had been eaten or burned,
-    publish it to the widget with a current timestamp, and go back to sleep.
+    So the overnight sequence was: wake while locked, fail every read, coerce all
+    three energy values to zero, compute a day in which nothing had been eaten or
+    burned, publish it to the widget with a current timestamp, and go back to sleep.
     Every subsequent locked wake did the same thing again. Nothing corrected it
     until a foreground launch — which by definition happens with the phone
     unlocked — finally read something real. That is exactly the reported
