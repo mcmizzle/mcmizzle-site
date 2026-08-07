@@ -177,20 +177,93 @@ Feed readers drop items with an unparseable date without reporting an error.
 
 - [ ] Every disclosure rule above holds. Re-read the diff specifically
       looking for secrets, verbatim private source, and other people's names.
-- [ ] All three files changed — post, index, feed.
+- [ ] All three files changed — post, index, feed. Plus `blog/CONSIDERED.md`.
 - [ ] Slug, canonical URL, and `og:url` agree with the actual directory.
 - [ ] The topic is not already covered by an existing post under `blog/`.
 - [ ] Every technical claim traces to something real in the repo history.
       No invented versions, numbers, or error messages.
+- [ ] **The post agrees with itself.** Every count, figure, and quantity is
+      consistent with every other mention of it across the post. Tracing each
+      claim to the source separately is not enough to catch this: the first
+      published draft said a failure path "coerced all four values to zero"
+      two paragraphs after correctly arguing that only three could have been
+      zero, and *both* halves were individually true of the real code. Read
+      the numbers as a set, not one at a time.
+- [ ] **Every external link actually resolves.** Fetch each one and confirm
+      it returns 200 — do not reason about whether a documentation URL looks
+      right. Plausible-but-wrong doc URLs are a specific failure mode here.
+- [ ] **Every quotation is verbatim.** If the post block-quotes a spec or a
+      doc page, fetch the source and compare word for word. Do not reproduce
+      a quote from memory, and do not silently tidy up its wording.
 - [ ] Serve the site locally and load the post, the index, and the feed —
       `python3 -m http.server`, then `http://localhost:8000/blog/`. Opening
       the file over `file://` loads it unstyled (see the root README).
 
-## The weekly agent
+## Record what you passed on
 
-A scheduled cloud agent reviews all active repos weekly and either opens a
-PR here or reports that nothing cleared the bar. It drafts; it does not
-publish. Every post is merged by a human.
+`blog/CONSIDERED.md` is the running record of topics that were weighed and
+rejected, and why. Update it in the same PR as the post.
 
-Its prompt points at this file, so **editing the rules above changes the
-agent's behavior** — no need to touch the routine itself.
+The point is that the reasoning survives. Deciding that a topic loses on the
+search test, or that it needs heavy generalization before it could be
+published safely, is real work — and if it only ever appears in one PR
+description it gets buried, and the next run re-derives it from scratch and
+may well reach a different answer.
+
+**It is a record, not a queue.** Nothing in that file is owed a post. A topic
+listed there still has to clear the bar on its own merits the week it comes
+up, and "I already thought about this one" is not a reason to lower it.
+
+If a run drafts nothing at all, it makes no commits, so that week's reasoning
+lives only in the run log. That is a known gap and it is deliberate — opening
+a PR that contains no post would trip the next run's "don't stack up drafts"
+check for no benefit.
+
+## Auditing published posts
+
+A second agent audits the archive monthly. Its job is **accuracy and
+currency**: a post that was true when written can rot when Apple ships an OS,
+fixes the bug, changes an API, or moves a documentation page.
+
+What it checks:
+
+- Every external link still resolves. Documentation URLs move constantly.
+- Every quotation still matches its source verbatim.
+- Technical claims still hold on current OS versions — a "this is
+  undocumented" or "there is no API for this" claim is exactly the kind that
+  expires quietly.
+- The post still agrees with itself and with the other posts.
+
+**It corrects in place. It does not remove posts, and it does not rewrite
+history.** A URL that has been up for a while has accumulated search position
+and inbound links; deleting it discards both and leaves a 404, and this site
+is static hosting with no way to issue a real redirect. Correcting a post
+keeps the URL and everything it has earned.
+
+So: fix the wrong sentence, repoint the dead link, update the stale version
+claim. Match the existing voice — a reader should not be able to tell which
+sentences were revised. If a post is so wrong that correcting it would mean
+rewriting the argument, **do not remove it and do not gut it** — report it and
+let Kevin decide. That call is his.
+
+The audit cannot judge whether a post is *read*. This site has no analytics
+by deliberate choice (`/privacy/` promises none, and that promise is
+referenced from both App Store listings), so there is no traffic data and the
+agent should not pretend to reason about popularity. It audits whether a post
+is still *correct*. Nothing more.
+
+Same rules as everything else here: it opens a PR, and a human merges it.
+
+## The agents
+
+Two scheduled cloud agents share this file:
+
+- **Weekly** — reviews all active repos and either opens a post PR or reports
+  that nothing cleared the bar.
+- **Monthly** — audits published posts for accuracy and currency.
+
+Neither publishes. Every change is merged by a human.
+
+Both prompts point at this file rather than restating its rules, so
+**editing the rules above changes what the agents do** — no need to touch
+either routine.
