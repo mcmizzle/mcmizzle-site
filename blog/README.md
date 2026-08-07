@@ -240,11 +240,45 @@ Add as the **first** `<item>` in `blog/feed.xml`, immediately after the
 `pubDate` must be RFC-822 (`Fri, 07 Aug 2026 12:00:00 +0000`), not ISO-8601.
 Feed readers drop items with an unparseable date without reporting an error.
 
+### 4. The Open Graph card
+
+Each post gets its own preview image. A link shared to LinkedIn or Slack is
+mostly its preview image, and every post pointing at the same monogram makes
+two different posts look like the same post.
+
+```
+python3 -m venv .venv && .venv/bin/pip install Pillow    # once
+.venv/bin/python tools/og-image.py <slug> "Post title"
+```
+
+That writes `assets/og-<slug>.png` at 1200×630. Point the post's `og:image`
+at it instead of the shared `assets/og-image.png`:
+
+```html
+<meta property="og:image" content="https://mcmizzle.com/assets/og-SLUG.png">
+```
+
+`twitter:image` isn't needed — Twitter/X and LinkedIn both fall back to
+`og:image`.
+
+**If Pillow isn't available in your environment, skip this step** and leave
+the shared `og-image.png` in place. The result is a worse preview, not a
+broken page. Say so in the PR so it can be generated at review time. Do not
+invent an `og:image` URL for a file you didn't create — a card that 404s is
+worse than a generic one, because most social clients cache the failure.
+
+### 5. The social copy
+
+Add a section to `blog/SOCIAL.md`, newest first. See "Social copy" below.
+
 ## Before opening the PR
 
 - [ ] Every disclosure rule above holds. Re-read the diff specifically
       looking for secrets, verbatim private source, and other people's names.
-- [ ] All three files changed — post, index, feed. Plus `blog/CONSIDERED.md`.
+- [ ] All five touched — post, `blog/index.html`, `blog/feed.xml`, the OG card
+      (or an explicit note saying why not), and `blog/SOCIAL.md`. Plus
+      `blog/CONSIDERED.md`.
+- [ ] The `og:image` URL names a file that actually exists in `assets/`.
 - [ ] Slug, canonical URL, and `og:url` agree with the actual directory.
 - [ ] The topic is not already covered by an existing post under `blog/`.
 - [ ] Every technical claim traces to something real in the repo history.
@@ -273,6 +307,36 @@ Feed readers drop items with an unparseable date without reporting an error.
 - [ ] Serve the site locally and load the post, the index, and the feed —
       `python3 -m http.server`, then `http://localhost:8000/blog/`. Opening
       the file over `file://` loads it unstyled (see the root README).
+
+## Social copy
+
+Every post gets a LinkedIn draft in `blog/SOCIAL.md`, written in the same PR
+and posted by hand. Nothing auto-publishes to Kevin's professional network.
+
+**Write it as a post, not a promotion.** The single most common failure is
+copy that announces a blog post instead of telling the story. Nobody follows
+a link to find out what the link is about. Give away the finding — the reader
+who wants the detail will click, and the reader who doesn't still got
+something from you.
+
+- **The first two lines are everything.** LinkedIn cuts to "see more" there.
+  Lead with the symptom or the surprise, never with "I wrote a new post about…"
+- **Plain language.** This audience is much broader than the post's. Someone
+  who has never written Swift should follow the shape of the problem. This is
+  the same reason posts carry ELI5 asides.
+- **Give the takeaway away, in full.** The generalizable lesson belongs in the
+  social copy, not held back as bait.
+- **No hype, no emoji ladders, no hashtag piles.** At most a couple of genuinely
+  relevant tags, and only if they're real terms of art.
+- **Never claim more than the post does.** If the post says something is
+  unverified, the social copy does not quietly upgrade it to fact. Copy is
+  where overstatement is most tempting and least visible.
+- **Don't put the link in the body.** The feed demotes posts with external
+  links. Post the text, then add the link as the first comment, and end the
+  body pointing at it ("write-up below").
+
+Length: 120–250 words. Long enough to carry the story, short enough to read
+standing up.
 
 ## Record what you passed on
 
@@ -328,6 +392,17 @@ agent should not pretend to reason about popularity. It audits whether a post
 is still *correct*. Nothing more.
 
 Same rules as everything else here: it opens a PR, and a human merges it.
+
+## Files in here
+
+- `README.md` — this contract
+- `CONSIDERED.md` — topics weighed and rejected, and why
+- `SOCIAL.md` — LinkedIn copy per post, copied out by hand
+- `AUTOMATION.md` — how posts reach LinkedIn and elsewhere
+- `index.html`, `feed.xml` — the post index and RSS feed
+- `<slug>/index.html` — one directory per post
+
+`../tools/og-image.py` generates a post's Open Graph card.
 
 ## The agents
 
