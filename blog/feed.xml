@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>McMizzle Blog</title>
+    <link>https://mcmizzle.com/blog/</link>
+    <description>Engineering notes from building McMizzle's apps — tvOS, watchOS, HealthKit, BLE, and the parts the documentation leaves out.</description>
+    <language>en-us</language>
+    <atom:link href="https://mcmizzle.com/blog/feed.xml" rel="self" type="application/rss+xml"/>
+
+    <!-- ITEMS: newest first. Add each new post as the first <item>.
+         pubDate must be RFC-822, e.g. Fri, 07 Aug 2026 12:00:00 +0000 -->
+    <!-- END ITEMS -->
+  </channel>
+</rss>

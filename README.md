@@ -12,6 +12,12 @@ is where they live once the domain/hosting below are set up.
 ## Structure
 
 - `index.html` — McMizzle landing page, lists all apps
+- `blog/` — engineering write-ups. `blog/README.md` is the authoring
+  contract: disclosure rules for the private repos, what earns a post, house
+  style, and the exact three files every post has to touch (post, index,
+  feed). Read it before adding a post by hand or changing what the weekly
+  agent does — the agent's prompt points at that file rather than restating
+  the rules, so editing it is how you steer the agent
 - `privacy/` — one privacy policy shared across every McMizzle app (accurate
   as of writing: no analytics/tracking anywhere, nothing sent to any server
   McMizzle operates, since there isn't one)
