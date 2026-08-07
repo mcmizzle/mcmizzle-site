@@ -15,6 +15,12 @@ undoes. So each paragraph is one long line, separated by blank lines, and the
 long lines are deliberate. Only genuine code and log samples keep their breaks,
 because there the breaks are meaningful.
 
+**Mark each block when it's used.** This file is a paste-buffer with no state
+of its own — nothing in a block distinguishes "drafted" from "already posted."
+Add a **Posted YYYY-MM-DD** line under the target when you use one, so nobody
+re-posts it. Leave the copy itself in place: it's the record of what was said,
+and the monthly audit checks the post URLs in here still resolve.
+
 **Two LinkedIn mechanics worth knowing.** The feed demotes posts carrying an
 external link in the body, so the usual move is to post the text, then add the
 link as the first comment. And only the first ~2 lines show before "see more",
@@ -30,6 +36,10 @@ so the hook has to survive being cut there.
 
 Target: <https://developer.apple.com/forums/thread/126398> — *"Lifecycle of a
 tvOS 13.2 TopShelf extension?"*
+
+**Posted 2026-08-07.** Don't post again — reposting the same reply to a thread
+is the fastest way to look like a spammer in a place where reputation is the
+whole point.
 
 Opened Nov 2019, **never answered**, with three other developers confirming
 the same thing through 2021 — and the behavior clearly still exists, since it
@@ -88,6 +98,8 @@ Write-up below, including the exact log lines to search for, and what an app ext
 
 Target: <https://developer.apple.com/forums/thread/756794> — *"Background
 Health Store Access for Lock Screen Widgets"*
+
+**Posted 2026-08-07.** Don't post again.
 
 Opened June 2024, still open. The poster wants widgets to update while the
 phone is locked, and filed FB13879739 about it. **We can't solve that** — and
