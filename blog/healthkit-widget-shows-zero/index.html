@@ -131,9 +131,9 @@ let query = HKStatisticsQuery(
     burned, publish it to the widget with a current timestamp, and go back to sleep.
     Every subsequent locked wake did the same thing again. Nothing corrected it
     until a foreground launch — which by definition happens with the phone
-    unlocked — finally read something real. That is exactly the reported
-    behavior, including the "fixes itself when I open the app" part that had me
-    chasing widget refresh in the first place.
+    unlocked — finally read something real. That accounts for every part of what
+    I'd been seeing, including the "fixes itself the moment I open the app" part
+    that had me chasing widget refresh in the first place.
   </p>
 
   <p>
