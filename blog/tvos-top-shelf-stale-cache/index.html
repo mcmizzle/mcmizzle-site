@@ -37,6 +37,21 @@
     rebooting the Apple TV.
   </p>
 
+  <details class="eli5">
+    <summary>ELI5: what's the Top Shelf?</summary>
+    <p>
+      On an Apple TV, highlighting an app on the top row of the home screen
+      makes a large banner appear above it. That banner is the Top Shelf, and
+      it's the app's chance to show something live — what's playing, what's
+      new, what's in progress — before you've opened it.
+    </p>
+    <p>
+      The app doesn't draw it. It hands the system a description of what should
+      appear, and the system renders it. That gap between what you hand over
+      and what gets drawn is the whole subject of this post.
+    </p>
+  </details>
+
   <p>
     That is an unsatisfying ending, so let me give you the useful version up
     front: <strong>the system caches the rendered Top Shelf tile, dedupes
@@ -89,6 +104,23 @@
     because it assumes the tile on screen was rendered from the item I was
     currently returning. It wasn't.
   </p>
+
+  <details class="eli5">
+    <summary>ELI5: what's an app extension, and an App Group?</summary>
+    <p>
+      An <strong>app extension</strong> is a small separate program that ships
+      inside your app but runs on its own — here, the bit that supplies the
+      Top Shelf banner. The system starts it when it wants content, and it's a
+      genuinely different process from the app, with its own restrictions.
+    </p>
+    <p>
+      Because they're separate, they can't simply read each other's files. An
+      <strong>App Group</strong> is a shared folder both are permitted to open,
+      which is how the app leaves a snapshot of the current state where the
+      extension can find it. Think of it less as "the same program" and more as
+      two coworkers sharing one drawer.
+    </p>
+  </details>
 
   <h2>Getting logs out of a Top Shelf extension</h2>
 
@@ -166,6 +198,22 @@ log.notice("""
     need something dynamic on the shelf, the app writes it and the extension
     only reads it.
   </p>
+
+  <details class="eli5">
+    <summary>ELI5: what's a sandbox, and what is "deny(1)"?</summary>
+    <p>
+      Every app on Apple's platforms runs inside a sandbox: a set of rules
+      about which files it may touch, enforced by the operating system rather
+      than by the app agreeing to behave. Reach outside the lines and the
+      system simply refuses.
+    </p>
+    <p>
+      <code>deny(1) file-write-create</code> is the system saying so in its own
+      log — this process asked to create a file at that path and was denied.
+      It's useful precisely because it comes from outside your code: it proves
+      the request was made and rejected, rather than never happening.
+    </p>
+  </details>
 
   <p>
     Worse, my failed copy didn't fall back. It returned nil for both image URLs

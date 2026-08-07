@@ -243,3 +243,66 @@ article.post img {
   border-top: 1px solid var(--border);
   font-size: 0.9rem;
 }
+
+/* ---- ELI5 asides ----
+   Plain <details>/<summary>. No JavaScript: collapsing is the element's own
+   behavior, so these work with JS off, are keyboard operable and announced
+   correctly by screen readers for free, and degrade to an open block on
+   anything too old to know <details> at all. */
+
+details.eli5 {
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.5rem 0.9rem;
+  margin: 1.5rem 0;
+  font-size: 0.93rem;
+}
+
+details.eli5 > summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--accent);
+  /* Drop the native triangle in favor of the +/- drawn below. */
+  list-style: none;
+  padding-right: 1.5rem;
+  position: relative;
+}
+
+details.eli5 > summary::-webkit-details-marker {
+  display: none;
+}
+
+details.eli5 > summary::after {
+  content: "+";
+  position: absolute;
+  right: 0;
+  font-weight: 400;
+  font-size: 1.15rem;
+  line-height: 1.35;
+  opacity: 0.65;
+}
+
+details.eli5[open] > summary::after {
+  content: "\2212";  /* proper minus, not a hyphen */
+}
+
+details.eli5[open] > summary {
+  margin-bottom: 0.4rem;
+}
+
+/* Keyboard focus has to stay visible once the native marker is gone. */
+details.eli5 > summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+details.eli5 > p:last-child {
+  margin-bottom: 0.5rem;
+}
+
+details.eli5 code {
+  /* The aside is already accent-tinted; the inline badge would vanish into it. */
+  background: var(--card);
+}

@@ -93,6 +93,22 @@
     is why this never reproduced while I was looking at it.
   </p>
 
+  <details class="eli5">
+    <summary>ELI5: what's a background wake?</summary>
+    <p>
+      An app on iOS isn't running most of the time. Instead of letting it sit
+      there burning battery, the system freezes it and wakes it briefly when
+      something relevant happens — new health data was recorded, or it's simply
+      been a while. The app gets a few seconds to do its work and is put back
+      to sleep.
+    </p>
+    <p>
+      The catch is that you don't choose when this happens. The system does,
+      and it mostly happens while the phone is untouched — which for a phone
+      means locked.
+    </p>
+  </details>
+
   <p>
     What the documentation doesn't tell you is the shape of that failure, and
     the shape is the whole bug.
@@ -124,6 +140,23 @@ let query = HKStatisticsQuery(
     with no samples in it. There is no signal left. Every caller downstream got
     a number that looked like data.
   </p>
+
+  <details class="eli5">
+    <summary>ELI5: what does <code>?? 0</code> do?</summary>
+    <p>
+      In Swift, a value that might be missing has to say so in its type, and
+      you can't use it until you've dealt with the missing case. The
+      <code>??</code> operator is the quickest way to deal with it: "use this
+      value, or if it's missing, use that one instead." So <code>?? 0</code>
+      means "or zero."
+    </p>
+    <p>
+      It's a convenience that quietly answers a question you may not have meant
+      to answer. "I don't have a number" and "the number is zero" are very
+      different statements, and <code>?? 0</code> turns the first into the
+      second without comment.
+    </p>
+  </details>
 
   <p>
     So the overnight sequence was: wake while locked, fail every read, coerce all
@@ -216,6 +249,20 @@ let query = HKStatisticsQuery(
     timeline entry at the next midnight so that flip lands on the day boundary
     even if no refresh gets a chance to run.
   </p>
+
+  <details class="eli5">
+    <summary>ELI5: what's a timeline entry?</summary>
+    <p>
+      A home-screen widget doesn't get to run whenever it likes — it would
+      drain the battery. Instead the app hands the system a short script ahead
+      of time: "show this now, and at midnight show that instead." Each of
+      those is a timeline entry.
+    </p>
+    <p>
+      So a widget can change on schedule without the app being awake at all.
+      The flip is written in advance and the system performs it.
+    </p>
+  </details>
 
   <p>
     Both fields decode leniently so payloads written by older builds still load.
