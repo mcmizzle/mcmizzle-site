@@ -58,3 +58,34 @@ paragraphs, not a post, and there is no short-form format on this site.
 Issue #17, 16+ rounds. **Lost on shape.** Too long, too inconclusive, and its
 honest ending is "this is the platform's ceiling and we accepted it." Several
 individual lessons are sharp; the arc is not a post.
+
+---
+
+## 2026-08-03
+
+### AmbientCast — hand-written pbxproj Top Shelf target
+Issue #4. A fabricated `com.apple.product-type.tv-app-extension` and a
+missing explicit `TVServices.framework` link. Strong story, but it overlaps
+the Top Shelf cache post's subject area and only one topic ships per week.
+**Genuinely queued** rather than rejected — no defect in the material.
+
+### CalorieBurndown — watchOS background-refresh chain dies on one expired task
+Issue #17, round 14. `scheduleNext()` ran only at the end of the task's async
+work with no expiration handler, so a single revoked task ended the chain
+permanently — recoverable only by reboot or the user reopening the app. Very
+good material.
+
+**Lost because the fix is still marked unverified** in CLAUDE.md: confirming
+it needs a multi-hour hands-off cycle. Don't publish a fix that hasn't been
+shown to work. Revisit once it's confirmed on device.
+
+### scorebridge — the watchdog again
+Reconsidered and rejected a second time, with sharper detail than the first
+pass: the liveness probe was only sent after 4s of *write* idleness and only
+the probe was written with-response, so busy traffic suppressed the signal
+proving traffic was getting through — the busier the link, the faster the
+watchdog fired, which is why a live game never triggered it.
+
+Same two reasons as before. **If it's ever written, write it as a pure
+CoreBluetooth write-with/without-response piece with the wire format
+entirely absent.**

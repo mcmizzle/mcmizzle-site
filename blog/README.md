@@ -35,6 +35,19 @@ be thrown away rather than patched.
 that got from one to the other, the platform behavior that turned out to be
 the real cause, and code you wrote fresh for the post to illustrate it.
 
+**Never assume a repo is public. Check.** `gh repo view <repo> --json
+visibility`. At the time of writing, `mcmizzle-site` is the only public one
+and every app repo is private — including the ones with live product pages
+on this site, which is exactly what makes them feel public when they aren't.
+A draft has already argued "this repo is public, so naming it carries less
+risk" about a private repo. It generalized anyway and nothing leaked, but it
+reached a safe answer from a false premise, and the same premise points the
+other way just as easily. One command settles it; reasoning about it does not.
+
+Note also that repo visibility is not the whole test. A repo being public
+would not make its secrets, its users' data, or its unreleased work
+publishable — those rules hold regardless.
+
 When in doubt, leave it out and say so in the PR description. It is always
 cheaper to ask than to un-publish.
 
@@ -195,6 +208,14 @@ Feed readers drop items with an unparseable date without reporting an error.
 - [ ] **Every quotation is verbatim.** If the post block-quotes a spec or a
       doc page, fetch the source and compare word for word. Do not reproduce
       a quote from memory, and do not silently tidy up its wording.
+- [ ] **Sample code is correct, not merely copied.** Reproducing what the
+      repo does is necessary but not sufficient — the repo can be wrong, and
+      a post turns its code into advice that strangers will follow. Check the
+      snippet on its own merits. The tvOS post shipped `hashValue` as a
+      content-derived identifier because the app does; Swift seeds `Hashable`
+      randomly per process, so it was never stable, and the surrounding
+      paragraph explaining *why* it worked was wrong. If you find a defect
+      like this, fix the post **and** file it against the app repo.
 - [ ] Serve the site locally and load the post, the index, and the feed —
       `python3 -m http.server`, then `http://localhost:8000/blog/`. Opening
       the file over `file://` loads it unstyled (see the root README).
