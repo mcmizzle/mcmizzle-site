@@ -206,6 +206,21 @@ let query = HKStatisticsQuery(
     something I watched happen.
   </p>
 
+  <p>
+    Since writing that, I found a
+    <a href="https://developer.apple.com/forums/thread/824819">May 2026 Developer Forums answer</a>
+    from an Apple DTS engineer that settles the general rule as plainly as
+    you could want: <em>"For privacy reasons, your app is not allowed to read
+    health data while a device is locked, though it can still save data, which
+    is then saved into a temporary file and merged with HealthKit's data when
+    the user unlocks their device."</em> That reply points at
+    <code>errorDatabaseInaccessible</code> for this case, which is good
+    corroboration — though it's still Apple describing the behavior rather than
+    me watching a specific code come back, so I'm leaving the caveat above
+    standing. Worth knowing the answer exists, because it took me a while to
+    find and it isn't in the framework documentation.
+  </p>
+
   <h2>One guard wasn't enough</h2>
 
   <p>

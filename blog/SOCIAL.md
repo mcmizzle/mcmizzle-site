@@ -18,6 +18,65 @@ so the hook has to survive being cut there.
 
 `https://mcmizzle.com/blog/tvos-top-shelf-stale-cache/`
 
+### Apple Developer Forums — thread 126398
+
+Target: <https://developer.apple.com/forums/thread/126398> — *"Lifecycle of a
+tvOS 13.2 TopShelf extension?"*
+
+Opened Nov 2019, **never answered**, with three other developers confirming
+the same thing through 2021 — and the behavior clearly still exists, because
+this post is from 2026. The shared mystery is "a reboot fixes it and nothing
+else does," which is exactly what happened here.
+
+The draft is deliberate about not overclaiming: their symptom is the extension
+not running at all, ours was a running extension whose output never reached
+the screen. Those may be different bugs. Say so rather than implying a fix.
+
+```
+Late to this thread, but it still bites in 2026 (tvOS 17, Apple TV 4K), and
+I don't think the caching angle has come up.
+
+Something a reboot does that reinstalling doesn't: the Home screen process
+caches the *rendered* Top Shelf tile and dedupes incoming content against
+that cache. In my case that cache survived a changed item identifier and a
+full uninstall and reinstall of the app, and kept drawing a tile built from
+an earlier build for hours while the current code was correct.
+
+The log line that finally showed it:
+
+    Skipping content update for [com.example.app] because it is unchanged
+
+If your item identifier is a constant, a corrected item is indistinguishable
+from the cached one, so a fix to what's *in* the tile can never reach the
+screen. Deriving the identifier from the content you're rendering closes that
+particular trap. (Use the content string itself, not its hashValue — Swift
+seeds Hashable per process, so a hash changes every launch regardless of
+content, which isn't what you want.)
+
+I want to be careful not to overclaim: your symptom is the extension not
+running at all after an Xcode relaunch, and mine was a running extension
+whose output wasn't reaching the screen. Those may well be different bugs.
+But if you're in the position of "only a reboot fixes it," it's worth
+checking whether the system is even accepting your content before concluding
+the extension is dead.
+
+Two other things that cost me an evening and are much easier to state than
+to discover:
+
+- print() from a Top Shelf extension reaches nobody, and `log stream` has no
+  device flag. os.Logger at .notice, read in Console.app with the Apple TV
+  tethered, is the channel that works. Not .debug, which isn't persisted by
+  default and so is missing from exactly the capture you collected.
+
+- An extension can *read* the shared App Group container but is sandbox-denied
+  from *creating files* in it — `deny(1) file-write-create`, surfacing as
+  NSCocoaErrorDomain 513. The containing app has no such restriction. If you
+  need something dynamic on the shelf, the app writes it and the extension
+  only reads it.
+
+Full write-up if it's any use: https://mcmizzle.com/blog/tvos-top-shelf-stale-cache/
+```
+
 ### LinkedIn
 
 ```
@@ -52,6 +111,64 @@ app extension can and can't do with an App Group.
 ## Why your HealthKit widget shows zero every morning
 
 `https://mcmizzle.com/blog/healthkit-widget-shows-zero/`
+
+### Apple Developer Forums — thread 756794
+
+Target: <https://developer.apple.com/forums/thread/756794> — *"Background
+Health Store Access for Lock Screen Widgets"*
+
+Opened June 2024, still open. The poster wants widgets to update while the
+phone is locked, and filed FB13879739 about it. **We can't solve that** — and
+the draft says so up front rather than pretending otherwise.
+
+What we can contribute is the failure mode *next to* their problem: what
+happens when you work around the locked store badly. That's a real
+contribution to an unanswered thread without overstating what we know.
+
+Do not open with the link, and don't answer a question that wasn't asked.
+
+```
+I don't have a way around the locked-store restriction either. There's now
+an explicit DTS answer confirming reads aren't permitted while locked
+(thread 824819, May 2026), so I've stopped hoping for one.
+
+What I can offer is the failure mode I hit while working around it, because
+it's easy to ship by accident and it presents as a completely different bug.
+
+A statistics query that fails because the store is encrypted reports no sum.
+That is the same thing it reports for a day with genuinely no samples. So if
+your read does something like
+
+    result?.sumQuantity()?.doubleValue(for: unit) ?? 0
+
+and binds the error parameter to _, a failed read returns a confident 0. Mine
+then got published to the widget with a *current* timestamp, so every morning
+the widget showed a plausible, freshly-stamped, completely wrong zero until
+the app was next opened. It reads exactly like a refresh bug — I lost time on
+timeline reloads and App Group configuration before noticing the timestamp
+was fresh, which meant the data wasn't stale, it was freshly wrong.
+
+What worked, given we can't read while locked:
+
+- Return an optional from the read. nil for a failed query, and 0 only for
+  HKError.errorNoData, which is HealthKit's way of saying the range really is
+  empty.
+- On failure, publish nothing and leave the previous values untouched. A
+  widget showing yesterday's number is far better than one showing a wrong
+  number today.
+- Audit every path that writes to the widget, not just the one you fixed. A
+  freshly-initialized model object is full of zeros too, and those are every
+  bit as plausible as the ones a failed query produces.
+- Carry the day the numbers describe separately from the "updated at" time.
+  Once a write can be skipped, "when was this written" stops answering "which
+  day is this about" — and that distinction is what lets you render a stale
+  payload as visibly stale instead of asserting it.
+
+None of that gets data while locked. It does stop the lock from producing
+wrong data, which in my case was the actual user-visible bug.
+
+Longer version: https://mcmizzle.com/blog/healthkit-widget-shows-zero/
+```
 
 ### LinkedIn
 
