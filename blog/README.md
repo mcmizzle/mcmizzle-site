@@ -138,6 +138,11 @@ bearing (`tvos-top-shelf-image-cache`, not `a-frustrating-evening`).
   <pre><code>// short, illustrative, written for the post
 </code></pre>
 
+  <details class="eli5">
+    <summary>ELI5: the jargon term</summary>
+    <p>Two or three plain sentences. See "ELI5 asides" below.</p>
+  </details>
+
   <h2>What I'd tell you to check first</h2>
   <p>The transferable takeaway.</p>
 </article>
@@ -153,6 +158,55 @@ bearing (`tvos-top-shelf-image-cache`, not `a-frustrating-evening`).
 Escape `<`, `>`, and `&` inside `<pre><code>` blocks as `&lt;`, `&gt;`, `&amp;`.
 Swift generics and HTML tags in sample code will otherwise silently eat the
 rest of the page.
+
+#### ELI5 asides
+
+A post's primary reader is an engineer who searched for their exact bug and
+needs no hand-holding. But posts also reach people arriving from a link
+rather than a search, and platform-specific jargon locks them out of a story
+they'd otherwise follow.
+
+So: `<details class="eli5">`, collapsed by default. The expert reader sees a
+one-line summary and skims past it. Everyone else gets a way in. No
+JavaScript is involved — collapsing is the element's own behavior, which is
+also why it is keyboard operable and screen-reader friendly for free.
+
+```html
+  <details class="eli5">
+    <summary>ELI5: what's an app extension?</summary>
+    <p>
+      A small separate program that ships inside your app and runs on the
+      system's schedule rather than yours. It gets its own sandbox and can't
+      simply reach into the app's files.
+    </p>
+  </details>
+```
+
+**Use one when** a term is load-bearing for the story and specific to a
+platform, framework, or domain the general reader has no reason to know:
+`.appex`, App Group, Top Shelf, background delivery, sandbox, complication.
+
+**Don't use one for** general programming vocabulary (cache, nil, closure,
+race), for anything the surrounding prose already explains, or to restate the
+argument. An ELI5 supplies *background*, never the point of the post. If a
+reader could skip every aside and still follow the piece, they're doing their
+job.
+
+Rules of thumb:
+
+- **Two to four per post.** One suggests the jargon wasn't really a barrier;
+  more than four means the post is written at the wrong level and should be
+  edited instead.
+- **Place it immediately after the paragraph that first uses the term**, not
+  in a glossary at the end. It answers a question the reader just formed.
+- **Two to four sentences.** If it needs more, it's a post of its own.
+- **Summary line names the term**, so a skimmer can tell what's inside
+  without opening it: "ELI5: what's an app extension?" not "ELI5: some
+  background."
+- **Plain language, no new jargon.** An explanation that needs its own
+  explanation has failed. Analogies are fine; cuteness is not.
+- **Same voice as the post.** These are Kevin explaining something simply,
+  not a textbook footnote.
 
 ### 2. The index entry
 
