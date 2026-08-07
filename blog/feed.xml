@@ -13,7 +13,7 @@
       <title>Why your HealthKit widget shows zero every morning</title>
       <link>https://mcmizzle.com/blog/healthkit-widget-shows-zero/</link>
       <guid isPermaLink="true">https://mcmizzle.com/blog/healthkit-widget-shows-zero/</guid>
-      <pubDate>Fri, 07 Aug 2026 12:00:00 +0000</pubDate>
+      <pubDate>Mon, 27 Jul 2026 12:00:00 +0000</pubDate>
       <description>The widget was wrong every morning and right the moment I opened the app — but its timestamp was fresh, so it wasn't stale, it was freshly wrong. HealthKit's store is encrypted while the phone is locked, and a query that fails for that reason is indistinguishable from a day with no data unless you read the error.</description>
     </item>
     <!-- END ITEMS -->
