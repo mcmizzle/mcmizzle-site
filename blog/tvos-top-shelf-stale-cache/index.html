@@ -17,7 +17,7 @@
 <meta property="og:title" content="Your tvOS Top Shelf tile is cached, and reinstalling won't clear it — McMizzle">
 <meta property="og:description" content="The Top Shelf kept drawing a placeholder image for hours after the code was correct. The system caches the rendered tile, dedupes on content, and survives an uninstall.">
 <meta property="og:image" content="https://mcmizzle.com/assets/og-image.png">
-<meta property="article:published_time" content="2026-08-07">
+<meta property="article:published_time" content="2026-08-03">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="/assets/style.css">
 </head>
@@ -26,7 +26,7 @@
 <main>
 <article class="post">
   <h1>Your tvOS Top Shelf tile is cached, and reinstalling won't clear it</h1>
-  <p class="post-meta">Kevin McMahon · August 7, 2026</p>
+  <p class="post-meta">Kevin McMahon · August 3, 2026</p>
 
   <p>
     The Top Shelf tile for my tvOS app started rendering a dark placeholder
@@ -202,12 +202,28 @@ let item = TVTopShelfSectionedItem(identifier: "current-item")
 
 // After: identity varies with what's actually in the item.
 let identity = [title, state, imageURL?.path ?? "no-image"].joined(separator: "|")
-let item = TVTopShelfSectionedItem(identifier: "current-item-\(identity.hashValue)")
+let item = TVTopShelfSectionedItem(identifier: "current-item-\(identity)")
 </code></pre>
 
   <p>
     Including the image path is deliberate: a bundle path embeds a UUID that
     changes on every install, so a reinstall always produces a fresh identifier.
+  </p>
+
+  <p>
+    One trap on the way there, which I walked straight into: don't run that
+    string through <code>hashValue</code>. Swift seeds <code>Hashable</code>
+    with a value chosen randomly per process, and the documentation is explicit
+    that hash values "are not guaranteed to be equal across different
+    executions of your program." The Top Shelf extension gets launched fresh
+    every time the system wants content, so
+    <code>identity.hashValue</code> yields a different number on every run
+    whether or not anything in the item changed. It does defeat the dedupe —
+    but for a reason that has nothing to do with the content, which makes the
+    identity string you just assembled pure decoration. Worse, it's the kind of
+    accident that stops being true the moment someone swaps in a stable hash
+    and quietly restores the caching you were trying to escape. Use the string
+    itself; identifiers are not required to be short.
   </p>
 
   <p>

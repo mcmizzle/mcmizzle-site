@@ -13,7 +13,7 @@
       <title>Your tvOS Top Shelf tile is cached, and reinstalling won't clear it</title>
       <link>https://mcmizzle.com/blog/tvos-top-shelf-stale-cache/</link>
       <guid isPermaLink="true">https://mcmizzle.com/blog/tvos-top-shelf-stale-cache/</guid>
-      <pubDate>Fri, 07 Aug 2026 12:00:00 +0000</pubDate>
+      <pubDate>Mon, 03 Aug 2026 12:00:00 +0000</pubDate>
       <description>The tile drew a placeholder for hours after the code was correct again. The Home screen caches the rendered tile, dedupes incoming content against it, and that cache survives uninstalling the app — only a reboot cleared it. Plus what actually works for getting logs out of a tvOS extension, and what an extension can and can't do with an App Group.</description>
     </item>
     <item>
