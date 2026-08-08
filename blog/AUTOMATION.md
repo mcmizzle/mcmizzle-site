@@ -82,83 +82,74 @@ with a number next to it. That is the specific way this goes wrong.
 
 ### Setting it up
 
-1. <https://search.google.com/search-console> → add a **Domain** property
-   (not URL-prefix) for `mcmizzle.com`. Domain properties cover `www`, both
-   protocols, and every subdirectory in one go.
-2. It will offer a DNS TXT record. **Use that**, not the HTML-file or
-   meta-tag method — the DNS route leaves the site untouched.
-3. Add the record at Porkbun: DNS → add record, type `TXT`, host blank (the
-   apex), value = the string Google gives you. Verification usually lands in
-   minutes, though DNS can take longer.
-4. Once verified, submit the sitemap: Search Console → Sitemaps → enter
-   `sitemap.xml`. `robots.txt` already points at it, but submitting is faster
-   than waiting for discovery.
-5. Expect nothing for weeks. That is normal for a new domain and is not a
-   sign anything is broken.
+Two accounts, both free at this volume: **Buffer** holds the queue you
+approve from, **Zapier** moves copy out of the feed into it. Neither is
+strictly required — see "Is this worth it" at the end.
 
-Bing Webmaster Tools is the same idea for Bing and DuckDuckGo, and can import
-directly from Search Console. Worth ten minutes eventually; not urgent.
+Nobody but Kevin can do this: it needs accounts in his name and an OAuth
+grant to his LinkedIn.
 
-## Getting posts onto LinkedIn
+**1. Buffer — the queue.**
+Sign up at <https://buffer.com>, connect the LinkedIn profile (not a company
+page, unless that's the target). In Buffer's settings for that channel, make
+sure posting is **manual/approval**, not automatic — if Buffer publishes on
+its own schedule there is only one gate and this whole arrangement is
+pointless. Install the phone app; approving from a phone is the difference
+between this happening and not.
 
-Two ways. Start with the manual one — it's better copy and takes two minutes.
+**2. Zapier — the mapping.**
+Sign up at <https://zapier.com>, then **Create → Zaps → new Zap**.
 
-## The recommended path: post by hand
+*Trigger:*
+- App: **RSS by Zapier**
+- Event: **New Item in Feed**
+- Feed URL: `https://mcmizzle.com/blog/social.xml`
+- Test it. Two items should come back — the tvOS Top Shelf post and the
+  HealthKit one. **Look at the test data before continuing.** You want to see
+  the full LinkedIn copy in a field called `description`. If that field is
+  empty or truncated, stop; something is wrong with the feed and it is worth
+  fixing before building on it.
 
-Every post ships with a LinkedIn draft in `blog/SOCIAL.md`, written and
-reviewed in the same PR. When the post merges:
+*Action:*
+- App: **Buffer**
+- Event: **Add to Queue** (not "Share Now")
+- Connect the Buffer account, pick the LinkedIn channel
+- **Text / Update field: insert the `description` field.** This is the whole
+  point. Not `title`, not `link` — those give you the botlike title-plus-URL
+  this file spends its length arguing against.
+- Leave everything else default. Do **not** attach the `link` field; the URL
+  goes in a first comment by hand.
 
-1. Open `blog/SOCIAL.md`, copy the LinkedIn block for the newest post.
-2. Paste it to LinkedIn. **No link in the body** — the feed demotes posts
-   carrying external links.
-3. Post, then immediately add the post URL as the first comment.
+Publish the Zap. It polls every 15 minutes on the free tier, so nothing
+appears instantly.
 
-This wins on quality and costs almost nothing. Auto-posted RSS reads like a
-bot, because it is one: the title plus a URL, with none of the hook that makes
-someone stop scrolling.
+**3. Prove it before trusting it.**
+Both existing posts are already in the feed and unposted, so they will be the
+first two queued. Open Buffer and read what actually landed. If it is the
+full copy with paragraph breaks intact, the mapping is right. If it is a
+title and a URL, the wrong field got mapped — go back to the action step.
 
-## The automated path: a queue you approve from
+**4. When you approve one.**
+Post it, then immediately add the post URL as the first comment. The copy is
+written expecting that, and it is the one part that cannot be automated.
+Then mark the block **Posted YYYY-MM-DD** in `SOCIAL.md`.
 
-The gap this closes: pointing a scheduler at the ordinary blog feed queues
-the post title and a link, which is the botlike output this file argues
-against. You would end up rewriting each one from `SOCIAL.md` by hand, which
-is the work you were trying to avoid.
+**Labels move.** Both products redesign regularly, so if a button is named
+something slightly different, the shape above still holds: RSS trigger,
+Buffer queue action, map the description field, never auto-publish.
 
-So there is a second feed. `tools/social-feed.py` generates
-`https://mcmizzle.com/blog/social.xml`, carrying the hand-written LinkedIn
-copy in each item's `<description>` and `<content:encoded>`. A scheduler maps
-that field into the post body, and what waits in the queue is the copy that
-was already reviewed.
+### Is this worth it
 
-**Two gates, deliberately.** The copy is reviewed once when the post's PR is
-merged, and again in the queue before it goes out. That is mildly redundant
-and worth keeping: the second look happens days later with fresh eyes, which
-is when weak copy becomes obvious. Nothing auto-publishes to Kevin's
-professional network.
+Honestly, maybe not. It is two accounts and two services in a chain, to
+replace opening `SOCIAL.md` and pasting — about thirty seconds of work for
+copy that is already written and reviewed.
 
-### Setting it up
+It earns its place only if the friction of *remembering* is what stops posts
+going out. If they would have gone out anyway, this is two more things to
+maintain and two more places the chain can quietly break without telling you.
 
-**Zapier or Make, not Buffer's own RSS feature.** Buffer's built-in RSS
-support is rigid about which fields become the post text; Zapier's *New Item
-in Feed* trigger exposes `title`, `link`, `description` and `content` as
-separate fields you map yourself, which is the whole point of the second
-feed. Buffer is still fine as the *queue* — Zapier's "Buffer → Add to Queue"
-action works well.
-
-1. Trigger: **New Item in Feed**, URL `https://mcmizzle.com/blog/social.xml`.
-2. Action: **Buffer → Add to Queue** (or LinkedIn directly, if you would
-   rather skip Buffer).
-3. Map the **`description`** field into the post text. Not `title`, not
-   `link` — `description` is where the real copy lives.
-4. Set it to **queue or draft, never publish immediately.** The queue is the
-   approval gate; if it publishes on arrival there is only one gate and this
-   whole arrangement is pointless.
-5. Post the link as the first comment yourself, after approving. The copy is
-   written expecting that, and there is no reliable way to automate a first
-   comment.
-
-Feed polling on free tiers is typically 15–60 minutes, so nothing appears
-instantly. Nothing here is time-sensitive.
+Try posting by hand for a few cycles first. If posts start getting skipped,
+wire this up then. The feed costs nothing sitting unused.
 
 ### Why not deduplicate by removing items
 
