@@ -514,9 +514,9 @@ listed there still has to clear the bar on its own merits the week it comes
 up, and "I already thought about this one" is not a reason to lower it.
 
 If a run drafts nothing at all, it makes no commits, so that week's reasoning
-lives only in the run log. That is a known gap and it is deliberate — opening
-a PR that contains no post would trip the next run's "don't stack up drafts"
-check for no benefit.
+lives only in the run log. That is a known gap and it is deliberate — a PR
+containing no post would sit on a `blog/…` branch and block the following
+week's run for no benefit.
 
 ## Auditing published posts
 
@@ -573,11 +573,42 @@ Same rules as everything else here: it opens a PR, and a human merges it.
 
 Two scheduled cloud agents share this file:
 
-- **Weekly** — reviews all active repos and either opens a post PR or reports
-  that nothing cleared the bar.
-- **Monthly** — audits published posts for accuracy and currency.
+- **Weekly** (Mondays) — reviews all active repos and either opens a post PR
+  on a `blog/<slug>` branch, or reports that nothing cleared the bar.
+- **Monthly** (the 15th) — audits published posts for accuracy and currency,
+  on an `audit/YYYY-MM` branch.
 
 Neither publishes. Every change is merged by a human.
+
+### Each agent blocks only on its own kind of PR
+
+Both skip a run rather than pile up work a human hasn't looked at yet. But
+that check matches **only its own branch prefix**:
+
+| Open PR | Weekly writer | Monthly auditor |
+| --- | --- | --- |
+| `blog/…` | skips | runs |
+| `audit/…` | runs | skips |
+| anything else | runs | runs |
+
+An ordinary site change — a typo fix, a new app page — blocks neither. Nor
+do they block each other.
+
+**This matters more than it looks.** The first version of both prompts
+skipped on *any* open PR, which meant an unreviewed post draft silently
+blocked the audit, and an open audit blocked the next week's post. Since the
+writer runs four or five times a month and drafts sit until someone reads
+them, the audit would have been blocked most months, and nothing would have
+reported that it had been. A job that quietly stops running is worse than
+one that fails loudly.
+
+So the branch prefixes are load-bearing, not cosmetic. A post PR must be on
+`blog/…` and an audit PR on `audit/…`, or the guards stop working.
+
+When both are open at once, the files they can collide on are
+`blog/index.html`, `blog/feed.xml`, and `sitemap.xml`. Each agent is told to
+say in its PR that the other is open, so the merge order is a decision
+rather than a surprise.
 
 Both prompts point at this file rather than restating its rules, so
 **editing the rules above changes what the agents do** — no need to touch
