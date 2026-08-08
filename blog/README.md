@@ -330,6 +330,69 @@ app, skip this.
       `python3 -m http.server`, then `http://localhost:8000/blog/`. Opening
       the file over `file://` loads it unstyled (see the root README).
 
+## Answering forum threads
+
+The highest-value thing this blog does. Every post should ship with a draft
+reply to a real thread where somebody is stuck on the same problem, added to
+`blog/SOCIAL.md` alongside the social copy.
+
+It works because it is the only tactic that pays off on every goal at once
+(see `AUTOMATION.md`): it helps a person who is stuck right now, it earns a
+link from a high-authority domain, it reaches engineers who have the problem
+rather than a general audience, and it is the opposite of self-promotion
+while still being self-promotion. A reply on `developer.apple.com` is worth
+more to a young domain than anything else available.
+
+**Where to look.** Apple Developer Forums first for anything Apple-platform.
+Also worth checking: GitHub issues on a relevant project, and subreddits like
+r/iOSProgramming — but read the self-promotion rules first, several require a
+participation ratio. Search the way an engineer with the bug would, not the
+way someone promoting a post would.
+
+### Picking a thread
+
+The search that finds the post's competition also finds its threads. Judge
+each candidate on:
+
+- **Is it actually unanswered, or answered badly?** An unanswered thread with
+  other people saying "I have this too" is the best possible target. A thread
+  whose accepted answer diagnoses something else is nearly as good — that
+  reader is being actively misled.
+- **Does the behavior still exist?** If the post reproduces it on a current
+  OS, say so with the version. That is often the exact thing readers of an old
+  thread want to know.
+- **Is it resolved with an accepted answer?** Then leave it alone. Replying to
+  a settled thread is necroposting and reads as link-dropping. A first pass at
+  this picked a decade-old thread with an accepted Apple staff answer; the
+  right move was to discard it and search again for live ones.
+
+Age alone doesn't disqualify a thread. One target used here had been open
+since 2019 with three developers confirming through 2021 — old, but never
+answered, and still reproducing.
+
+### Writing the reply
+
+**Answer the question. The link is evidence, not the point.** The test: delete
+the link — does the reply still help? If not, it's an advertisement and it
+will read as one.
+
+- **Lead with the substance**, and put the link in the last line.
+- **Concede what you can't solve, up front.** One reply here opens by
+  admitting it has no way around the restriction the poster is asking about.
+  That is what earns the rest of it.
+- **Don't claim their bug is your bug.** If the symptoms differ, say so
+  explicitly. Overclaiming a fix wastes the time of someone already stuck.
+- **Include the searchable strings** — log lines, error codes, API names.
+  Future searchers land on the thread, not the post, and those strings are
+  how they find it.
+- Same house style as a post, and the same disclosure rules: a forum reply is
+  as public and permanent as anything under `/blog/`.
+
+### After posting
+
+Mark the block **Posted YYYY-MM-DD** in `SOCIAL.md`. Never post the same
+reply twice — in a venue built on reputation, that reads as spam.
+
 ## Social copy
 
 Every post gets a LinkedIn draft in `blog/SOCIAL.md`, written in the same PR
