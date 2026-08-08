@@ -25,6 +25,11 @@ is to only do things that pay off on several axes. By that test:
 
 The top two rows are the strategy. The rest is supporting work.
 
+Forum answers are now part of the weekly run rather than an afterthought:
+every post ships with a draft reply to a real unanswered thread. See
+"Answering forum threads" in `README.md` for how targets are picked and why
+a reply that stops helping when you delete the link is an advertisement.
+
 **Time is the dominant variable, not tactics.** The domain was registered
 2026-08-01. A new domain takes weeks to months to be crawled, indexed, and
 ranked, and there is no way to buy past that. Anything done in a given week
