@@ -271,6 +271,28 @@ worse than a generic one, because most social clients cache the failure.
 
 Add a section to `blog/SOCIAL.md`, newest first. See "Social copy" below.
 
+### 6. The sitemap
+
+```
+python3 tools/sitemap.py
+```
+
+Standard library only — this one runs anywhere, including the agents'
+sandbox. It rebuilds `sitemap.xml` from whatever directories actually contain
+an `index.html`, so it can't drift out of sync with the posts. Commit the
+result.
+
+### Link the app the post came from
+
+If the post grew out of work on one of the apps, name that app and link its
+page (`/ambientcast/`, `/calorieburndown/`) the first time it comes up. App
+discovery is one of the reasons the blog exists.
+
+Name it plainly and move on — one link in the prose, not a pitch. The opening
+paragraph's job is to confirm a searcher is in the right place, and it stops
+doing that job if it turns into an advertisement. If the post isn't about an
+app, skip this.
+
 ## Before opening the PR
 
 - [ ] Every disclosure rule above holds. Re-read the diff specifically
