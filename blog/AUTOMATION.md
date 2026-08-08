@@ -117,7 +117,57 @@ This wins on quality and costs almost nothing. Auto-posted RSS reads like a
 bot, because it is one: the title plus a URL, with none of the hook that makes
 someone stop scrolling.
 
-## The automated path: RSS to Buffer
+## The automated path: a queue you approve from
+
+The gap this closes: pointing a scheduler at the ordinary blog feed queues
+the post title and a link, which is the botlike output this file argues
+against. You would end up rewriting each one from `SOCIAL.md` by hand, which
+is the work you were trying to avoid.
+
+So there is a second feed. `tools/social-feed.py` generates
+`https://mcmizzle.com/blog/social.xml`, carrying the hand-written LinkedIn
+copy in each item's `<description>` and `<content:encoded>`. A scheduler maps
+that field into the post body, and what waits in the queue is the copy that
+was already reviewed.
+
+**Two gates, deliberately.** The copy is reviewed once when the post's PR is
+merged, and again in the queue before it goes out. That is mildly redundant
+and worth keeping: the second look happens days later with fresh eyes, which
+is when weak copy becomes obvious. Nothing auto-publishes to Kevin's
+professional network.
+
+### Setting it up
+
+**Zapier or Make, not Buffer's own RSS feature.** Buffer's built-in RSS
+support is rigid about which fields become the post text; Zapier's *New Item
+in Feed* trigger exposes `title`, `link`, `description` and `content` as
+separate fields you map yourself, which is the whole point of the second
+feed. Buffer is still fine as the *queue* — Zapier's "Buffer → Add to Queue"
+action works well.
+
+1. Trigger: **New Item in Feed**, URL `https://mcmizzle.com/blog/social.xml`.
+2. Action: **Buffer → Add to Queue** (or LinkedIn directly, if you would
+   rather skip Buffer).
+3. Map the **`description`** field into the post text. Not `title`, not
+   `link` — `description` is where the real copy lives.
+4. Set it to **queue or draft, never publish immediately.** The queue is the
+   approval gate; if it publishes on arrival there is only one gate and this
+   whole arrangement is pointless.
+5. Post the link as the first comment yourself, after approving. The copy is
+   written expecting that, and there is no reliable way to automate a first
+   comment.
+
+Feed polling on free tiers is typically 15–60 minutes, so nothing appears
+instantly. Nothing here is time-sensitive.
+
+### Why not deduplicate by removing items
+
+Items stay in `social.xml` after they have been posted. Schedulers dedupe on
+`<guid>`, which is the post URL and therefore stable, so each item is queued
+exactly once. Pruning the feed would risk re-queueing everything if a
+scheduler ever lost its state.
+
+## The older option: Buffer's own RSS
 
 If posting by hand stops happening, wire the feed up. `https://mcmizzle.com/blog/feed.xml`
 is a valid RSS 2.0 feed with `title`, `link`, `guid`, `pubDate`, and

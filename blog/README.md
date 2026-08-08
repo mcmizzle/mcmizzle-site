@@ -333,16 +333,25 @@ worse than a generic one, because most social clients cache the failure.
 
 Add a section to `blog/SOCIAL.md`, newest first. See "Social copy" below.
 
-### 6. The sitemap
+### 6. The sitemap and the social feed
 
 ```
 python3 tools/sitemap.py
+python3 tools/social-feed.py
 ```
 
-Standard library only — this one runs anywhere, including the agents'
-sandbox. It rebuilds `sitemap.xml` from whatever directories actually contain
-an `index.html`, so it can't drift out of sync with the posts. Commit the
-result.
+Standard library only — both run anywhere, including the agents' sandbox.
+
+`sitemap.py` rebuilds `sitemap.xml` from whatever directories actually
+contain an `index.html`, so it can't drift out of sync with the posts.
+
+`social-feed.py` rebuilds `blog/social.xml` from the LinkedIn blocks in
+`SOCIAL.md`. That feed is what a scheduler reads to put the *real* copy into
+a queue for approval, rather than the title-plus-link a plain RSS feed would
+produce. It exits non-zero on a malformed or empty block rather than
+publishing something odd, so run it and read the output.
+
+Commit both results.
 
 ### Link the app the post came from
 
@@ -359,9 +368,13 @@ app, skip this.
 
 - [ ] Every disclosure rule above holds. Re-read the diff specifically
       looking for secrets, verbatim private source, and other people's names.
-- [ ] All five touched — post, `blog/index.html`, `blog/feed.xml`, the OG card
-      (or an explicit note saying why not), and `blog/SOCIAL.md`. Plus
-      `blog/CONSIDERED.md`.
+- [ ] Everything touched — post, `blog/index.html`, `blog/feed.xml`, the OG
+      card (or an explicit note saying why not), `blog/SOCIAL.md`,
+      `blog/CONSIDERED.md`, and both generated files (`sitemap.xml`,
+      `blog/social.xml`).
+- [ ] `python3 tools/social-feed.py` ran clean and its output includes the
+      new post. If it exited non-zero, the `SOCIAL.md` block is malformed —
+      fix it rather than committing a stale feed.
 - [ ] The `og:image` URL names a file that actually exists in `assets/`.
 - [ ] Slug, canonical URL, and `og:url` agree with the actual directory.
 - [ ] The topic is not already covered by an existing post under `blog/`.
