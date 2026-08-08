@@ -92,6 +92,68 @@ none of it cleared the bar.
 - Never invent a detail to make the story flow. If the git history does not
   establish something, either leave it out or say it is uncertain.
 
+### The dry bit
+
+Kevin's writing has a wry, understated register, and posts should carry it.
+It is not a joke layer applied on top of technical prose — it is *how the
+technical thing gets described*. Read a page of his commit messages before
+writing; that is the voice, and it is the best available sample of it.
+
+The three moves that actually appear:
+
+**The machine as an unreliable actor.** Systems do things *to* you, with
+apparent intent, and stating that plainly is the joke.
+
+> a dropped third strike could invent an out
+> a finished game was blindfolding the poll
+> the games and board sections were wired to nothing
+> Stop the demo printer's detail screen offering settings that break it
+
+**Exasperation carried by a single word.** *actually*, *at all*, *again*,
+*a person*. Never a whole sentence of complaint — one word, then move on.
+
+> Left-align Close so it can actually be focused
+> Make cameras reachable at all
+> Log the Top Shelf extension somewhere a person can actually read
+> Put "Refresh from Cloud" next to the thing it refreshes
+
+**Cost stated flatly, without self-pity.** The understatement is the point.
+
+> Record the Top Shelf cache lesson that cost an evening
+> Correct two CLAUDE.md claims that cost most of a verification session
+
+Both published posts already do this in places — *"and then you're debugging
+your own debugging,"* *"it kept faithfully drawing a tile from builds ago,"*
+*"in the confident green of a goal you've already met."* More of that. It is
+the register, not a departure from it.
+
+**What this is not, and this matters more than the above.** This instruction
+is the easiest one here to overshoot, and an overshot version is much worse
+than a flat post. So:
+
+- **No jokes, no puns, no wordplay.** The humor is structural — it lives in
+  how a fact is framed. Nothing is ever *added* to be funny.
+- **No punchlines and no signposting.** No "spoiler alert," no "plot twist,"
+  no "narrator: it was not," no "(yes, really)," no rhetorical "guess what
+  happened next."
+- **No exclamation marks. No emoji. No parenthetical winking.**
+- **No performed self-deprecation.** "I'm an idiot," "in my infinite wisdom,"
+  "past me was a fool." Kevin states what a mistake cost and moves on; he
+  does not perform embarrassment about it.
+- **Never at the reader's expense.** The reader is stuck on this exact bug
+  right now. The wryness is aimed at the platform, the machine, and Kevin's
+  own wrong turns — never at someone who doesn't already know the answer.
+- **Never at accuracy's expense.** If a funnier phrasing is less precise, the
+  precise one wins, every time.
+
+A good test: could this sentence appear in one of his commit messages? If it
+reads like a tech-blog quip, it fails. If it reads like someone describing
+what happened, slightly tired, entirely accurate, it passes.
+
+Frequency: a handful across a post. It should feel like the writer's natural
+register, not like a comedian doing tech support. **When in doubt, be flat.**
+The reader came for the answer.
+
 ## Adding a post — the three steps
 
 ### 1. The post file
