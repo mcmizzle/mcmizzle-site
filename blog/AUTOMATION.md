@@ -1,4 +1,46 @@
-# Getting posts onto LinkedIn
+# Reaching people
+
+## The strategy, and why it looks like this
+
+Written down because there is no measurement. Nothing here can be evaluated
+against traffic data, so the *reasoning* has to survive instead — otherwise
+it gets re-argued from scratch every few months and drifts toward whatever
+felt clever most recently.
+
+**Four goals, all real:** app discovery, professional reputation, genuinely
+helping engineers, and audience size. They pull in different directions and
+none is dominant.
+
+**So the selection rule is: prefer tactics that serve more than one goal at
+once.** When you can't tell what worked, the way to avoid being wholly wrong
+is to only do things that pay off on several axes. By that test:
+
+| | apps | reputation | helping | audience |
+|---|---|---|---|---|
+| Answering a stuck forum thread | ~ | yes | yes | yes |
+| Publishing a genuinely good post | yes | yes | yes | yes |
+| LinkedIn post | ~ | yes | ~ | ~ |
+| Crawlability hygiene | yes | no | no | yes |
+| Chasing an aggregator spike | no | ~ | ~ | ~ |
+
+The top two rows are the strategy. The rest is supporting work.
+
+**Time is the dominant variable, not tactics.** The domain was registered
+2026-08-01. A new domain takes weeks to months to be crawled, indexed, and
+ranked, and there is no way to buy past that. Anything done in a given week
+shows up, if at all, a quarter later. Treat any tactic that promises faster
+than that with suspicion.
+
+**What this means in practice:** keep publishing at an honest bar, answer
+forum threads where someone is actually stuck, stay crawlable, and let the
+compounding happen. That is close to the whole plan, and its unglamorousness
+is the point.
+
+**Deliberately not doing:** analytics of any kind, buying links, posting the
+same content to five aggregators, cross-posting to Medium without a canonical
+link, or publishing more often than the material justifies.
+
+## Getting posts onto LinkedIn
 
 Two ways. Start with the manual one — it's better copy and takes two minutes.
 
