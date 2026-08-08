@@ -10,7 +10,7 @@
       <title><![CDATA[Your tvOS Top Shelf tile is cached, and reinstalling won't clear it]]></title>
       <link>https://mcmizzle.com/blog/tvos-top-shelf-stale-cache/</link>
       <guid isPermaLink="true">https://mcmizzle.com/blog/tvos-top-shelf-stale-cache/</guid>
-      <pubDate>Fri, 07 Aug 2026 18:53:43 -0500</pubDate>
+      <pubDate>Mon, 03 Aug 2026 12:00:00 +0000</pubDate>
       <description><![CDATA[I spent an evening debugging code that was already correct.
 
 The Top Shelf tile for my tvOS app showed a placeholder instead of its image. The title was right. The progress bar was right. Just no image. I wrote two fixes, both wrong, and the thing that finally worked was rebooting the Apple TV.
@@ -38,7 +38,7 @@ Write-up below, including the exact log lines to search for, and what an app ext
       <title><![CDATA[Why your HealthKit widget shows zero every morning]]></title>
       <link>https://mcmizzle.com/blog/healthkit-widget-shows-zero/</link>
       <guid isPermaLink="true">https://mcmizzle.com/blog/healthkit-widget-shows-zero/</guid>
-      <pubDate>Fri, 07 Aug 2026 18:53:43 -0500</pubDate>
+      <pubDate>Mon, 27 Jul 2026 12:00:00 +0000</pubDate>
       <description><![CDATA[My iPhone widget was wrong every morning, and right the moment I opened the app.
 
 The obvious read is that it's stale and needs to refresh harder. That was wrong, and the tell was the timestamp: it said two minutes ago. The data wasn't old. It was freshly wrong, which is a different bug with a different cause, and it rules out every fix in the refresh-scheduling family.
