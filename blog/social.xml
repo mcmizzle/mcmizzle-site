@@ -21,7 +21,7 @@ So if you have ever shipped even one build that handed the Top Shelf a bad item,
 
 What I would carry past tvOS: all of my logging measured what the extension sent. Nothing measured what the system drew, and the two had quietly stopped being the same thing. When a fix that should work changes nothing — not the symptom, not even its shape — stop refining the fix and start asking whether your output is reaching the renderer.
 
-Write-up below, including the exact log lines to search for, and what an app extension can and can't do with an App Group.]]></description>
+Full write-up, including the exact log lines to search for and what an app extension can and can't do with an App Group: https://mcmizzle.com/blog/tvos-top-shelf-stale-cache/]]></description>
       <content:encoded><![CDATA[I spent an evening debugging code that was already correct.
 
 The Top Shelf tile for my tvOS app showed a placeholder instead of its image. The title was right. The progress bar was right. Just no image. I wrote two fixes, both wrong, and the thing that finally worked was rebooting the Apple TV.
@@ -32,7 +32,7 @@ So if you have ever shipped even one build that handed the Top Shelf a bad item,
 
 What I would carry past tvOS: all of my logging measured what the extension sent. Nothing measured what the system drew, and the two had quietly stopped being the same thing. When a fix that should work changes nothing — not the symptom, not even its shape — stop refining the fix and start asking whether your output is reaching the renderer.
 
-Write-up below, including the exact log lines to search for, and what an app extension can and can't do with an App Group.]]></content:encoded>
+Full write-up, including the exact log lines to search for and what an app extension can and can't do with an App Group: https://mcmizzle.com/blog/tvos-top-shelf-stale-cache/]]></content:encoded>
     </item>
     <item>
       <title><![CDATA[Why your HealthKit widget shows zero every morning]]></title>
@@ -49,7 +49,7 @@ I had written `?? 0`. So a failure became a confident zero, and every caller dow
 
 The general version is the part I'd actually keep: any `??`, `try?`, or ignored error parameter whose default is 0 has made failure indistinguishable from data. Zero is uniquely dangerous because it doesn't look like an error state — it renders as a plausible, correctly formatted number that nothing downstream can flag.
 
-Write-up below, with the fix and the second bug that refusing to publish garbage exposed.]]></description>
+Full write-up, with the fix and the second bug that refusing to publish garbage exposed: https://mcmizzle.com/blog/healthkit-widget-shows-zero/]]></description>
       <content:encoded><![CDATA[My iPhone widget was wrong every morning, and right the moment I opened the app.
 
 The obvious read is that it's stale and needs to refresh harder. That was wrong, and the tell was the timestamp: it said two minutes ago. The data wasn't old. It was freshly wrong, which is a different bug with a different cause, and it rules out every fix in the refresh-scheduling family.
@@ -60,7 +60,7 @@ I had written `?? 0`. So a failure became a confident zero, and every caller dow
 
 The general version is the part I'd actually keep: any `??`, `try?`, or ignored error parameter whose default is 0 has made failure indistinguishable from data. Zero is uniquely dangerous because it doesn't look like an error state — it renders as a plausible, correctly formatted number that nothing downstream can flag.
 
-Write-up below, with the fix and the second bug that refusing to publish garbage exposed.]]></content:encoded>
+Full write-up, with the fix and the second bug that refusing to publish garbage exposed: https://mcmizzle.com/blog/healthkit-widget-shows-zero/]]></content:encoded>
     </item>
   </channel>
 </rss>

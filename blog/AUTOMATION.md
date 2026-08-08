@@ -117,8 +117,9 @@ Sign up at <https://zapier.com>, then **Create → Zaps → new Zap**.
 - **Text / Update field: insert the `description` field.** This is the whole
   point. Not `title`, not `link` — those give you the botlike title-plus-URL
   this file spends its length arguing against.
-- Leave everything else default. Do **not** attach the `link` field; the URL
-  goes in a first comment by hand.
+- Leave everything else default. Do **not** attach the `link` field — the URL
+  is already the last line of the copy, and attaching it would duplicate it
+  and turn the post into a link preview card.
 
 Publish the Zap. It polls every 15 minutes on the free tier, so nothing
 appears instantly.
@@ -130,9 +131,26 @@ full copy with paragraph breaks intact, the mapping is right. If it is a
 title and a URL, the wrong field got mapped — go back to the action step.
 
 **4. When you approve one.**
-Post it, then immediately add the post URL as the first comment. The copy is
-written expecting that, and it is the one part that cannot be automated.
-Then mark the block **Posted YYYY-MM-DD** in `SOCIAL.md`.
+Publish it. That is the whole step — the URL is already the last line of the
+copy. Then mark the block **Posted YYYY-MM-DD** in `SOCIAL.md`.
+
+### Why the link is in the body
+
+Conventional advice says put it in a first comment, because LinkedIn
+supposedly demotes posts carrying external links. This file stated that as
+fact for a while. It shouldn't have.
+
+The evidence is mixed and LinkedIn has publicly disputed it. At one post a
+week the difference would be undetectable, and with no analytics here it
+could not be measured even if it were real. Meanwhile Buffer's first-comment
+feature is paid-only, so following the convention meant one permanent manual
+step in a chain built to remove manual steps.
+
+So the link goes last in the body, phrased as an offer of detail rather than
+a bare URL. That reads like a person sharing something they wrote, which is
+the part that actually matters and does not depend on any claim about an
+algorithm. See issue #24 for automating a first comment if that ever becomes
+free.
 
 **Labels move.** Both products redesign regularly, so if a button is named
 something slightly different, the shape above still holds: RSS trigger,
