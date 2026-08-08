@@ -491,9 +491,15 @@ something from you.
 - **Never claim more than the post does.** If the post says something is
   unverified, the social copy does not quietly upgrade it to fact. Copy is
   where overstatement is most tempting and least visible.
-- **Don't put the link in the body.** The feed demotes posts with external
-  links. Post the text, then add the link as the first comment, and end the
-  body pointing at it ("write-up below").
+- **End with the link.** Last line, after the takeaway, phrased as an offer
+  of more detail rather than a call to action — "Full write-up, with X and Y:
+  <url>". Not a bare URL on its own line, which reads like an ad.
+
+  This used to say the opposite: link in a first comment, body ending "write-up
+  below." That was dropped because Buffer's first-comment feature is paid-only,
+  so it meant a manual step in an otherwise automated chain — and the reach
+  argument for it is weaker than it's usually stated. See "Why the link is in
+  the body" in `AUTOMATION.md`.
 
 Length: 120–250 words. Long enough to carry the story, short enough to read
 standing up.

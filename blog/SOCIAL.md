@@ -21,10 +21,13 @@ Add a **Posted YYYY-MM-DD** line under the target when you use one, so nobody
 re-posts it. Leave the copy itself in place: it's the record of what was said,
 and the monthly audit checks the post URLs in here still resolve.
 
-**Two LinkedIn mechanics worth knowing.** The feed demotes posts carrying an
-external link in the body, so the usual move is to post the text, then add the
-link as the first comment. And only the first ~2 lines show before "see more",
-so the hook has to survive being cut there.
+**The link goes in the body, last line.** Buffer's first-comment feature is
+paid-only, so a comment would mean a manual step in an otherwise automated
+chain. See `AUTOMATION.md` for why the reach argument against body links is
+weaker than it's usually stated.
+
+**Only the first ~2 lines show before "see more"**, so the hook has to survive
+being cut there.
 
 ---
 
@@ -85,7 +88,7 @@ So if you have ever shipped even one build that handed the Top Shelf a bad item,
 
 What I would carry past tvOS: all of my logging measured what the extension sent. Nothing measured what the system drew, and the two had quietly stopped being the same thing. When a fix that should work changes nothing — not the symptom, not even its shape — stop refining the fix and start asking whether your output is reaching the renderer.
 
-Write-up below, including the exact log lines to search for, and what an app extension can and can't do with an App Group.
+Full write-up, including the exact log lines to search for and what an app extension can and can't do with an App Group: https://mcmizzle.com/blog/tvos-top-shelf-stale-cache/
 ```
 
 ---
@@ -150,5 +153,5 @@ I had written `?? 0`. So a failure became a confident zero, and every caller dow
 
 The general version is the part I'd actually keep: any `??`, `try?`, or ignored error parameter whose default is 0 has made failure indistinguishable from data. Zero is uniquely dangerous because it doesn't look like an error state — it renders as a plausible, correctly formatted number that nothing downstream can flag.
 
-Write-up below, with the fix and the second bug that refusing to publish garbage exposed.
+Full write-up, with the fix and the second bug that refusing to publish garbage exposed: https://mcmizzle.com/blog/healthkit-widget-shows-zero/
 ```
