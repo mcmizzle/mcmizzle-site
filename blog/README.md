@@ -420,11 +420,16 @@ sentences were revised. If a post is so wrong that correcting it would mean
 rewriting the argument, **do not remove it and do not gut it** — report it and
 let Kevin decide. That call is his.
 
-The audit cannot judge whether a post is *read*. This site has no analytics
-by deliberate choice (`/privacy/` promises none, and that promise is
-referenced from both App Store listings), so there is no traffic data and the
-agent should not pretend to reason about popularity. It audits whether a post
-is still *correct*. Nothing more.
+The audit cannot judge whether a post is *read*. This site runs no visitor
+analytics by deliberate choice, so there is no traffic data and the agent
+should not pretend to reason about popularity. It audits whether a post is
+still *correct*. Nothing more.
+
+The one exception is Google Search Console, which the audit agent has no
+access to and should not reason about either. It reports Google's index, not
+visitors, and reading it is Kevin's job. Nothing in this repo contains
+traffic data of any kind, so any claim about how a post performed would be
+invented.
 
 Same rules as everything else here: it opens a PR, and a human merges it.
 
