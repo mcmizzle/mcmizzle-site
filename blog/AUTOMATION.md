@@ -36,9 +36,63 @@ forum threads where someone is actually stuck, stay crawlable, and let the
 compounding happen. That is close to the whole plan, and its unglamorousness
 is the point.
 
-**Deliberately not doing:** analytics of any kind, buying links, posting the
-same content to five aggregators, cross-posting to Medium without a canonical
-link, or publishing more often than the material justifies.
+**Deliberately not doing:** visitor analytics of any kind, buying links,
+posting the same content to five aggregators, cross-posting to Medium without
+a canonical link, or publishing more often than the material justifies.
+
+## Measurement, and its limits
+
+The site is registered with **Google Search Console** and nothing else.
+
+**Why that isn't a reversal of the no-tracking position.** Analytics watches
+your visitors. Search Console reports what Google already knows about your
+pages. It puts no code on the site, sets no cookies, and cannot identify a
+visitor. Verification is a DNS TXT record, so not one byte of the site
+changed. The privacy policy's promises were always scoped to the apps; the
+site now has its own short section saying this plainly, which is more
+trustworthy than the silence it replaced.
+
+**Why set it up before there's anything to see.** There is no backfill. Data
+starts the day you verify. Registering during the site's first week costs
+nothing and preserves the only historical record of this period that will
+ever exist.
+
+**Use it as a diagnostic and a writing input, not a scoreboard.** The two
+questions worth opening it for:
+
+1. *Is anything actually indexed, and are there crawl errors?* A brand-new
+   domain can fail silently for months, and you would have no other way to
+   find out.
+2. *Which queries surfaced a page?* This is the genuinely valuable one. It
+   feeds what to write next, which is the highest-leverage decision in the
+   whole system — the weekly agent currently picks topics on judgment alone.
+
+**What it cannot tell you, which is most of what happens.** Search Console
+sees Google search only. Click-throughs from an Apple Developer Forums reply,
+LinkedIn referrals, a link pasted into someone's Slack, direct visits — all
+invisible. The outreach that this file argues is the highest-value work is
+precisely the part that stays unmeasured. Do not let the one measurable
+channel quietly become the only one you work on, just because it is the one
+with a number next to it. That is the specific way this goes wrong.
+
+### Setting it up
+
+1. <https://search.google.com/search-console> → add a **Domain** property
+   (not URL-prefix) for `mcmizzle.com`. Domain properties cover `www`, both
+   protocols, and every subdirectory in one go.
+2. It will offer a DNS TXT record. **Use that**, not the HTML-file or
+   meta-tag method — the DNS route leaves the site untouched.
+3. Add the record at Porkbun: DNS → add record, type `TXT`, host blank (the
+   apex), value = the string Google gives you. Verification usually lands in
+   minutes, though DNS can take longer.
+4. Once verified, submit the sitemap: Search Console → Sitemaps → enter
+   `sitemap.xml`. `robots.txt` already points at it, but submitting is faster
+   than waiting for discovery.
+5. Expect nothing for weeks. That is normal for a new domain and is not a
+   sign anything is broken.
+
+Bing Webmaster Tools is the same idea for Bing and DuckDuckGo, and can import
+directly from Search Console. Worth ten minutes eventually; not urgent.
 
 ## Getting posts onto LinkedIn
 
@@ -103,8 +157,11 @@ The last one is the highest value per unit effort and the easiest to forget.
 
 ## A caveat about measuring any of this
 
-This site runs no analytics, deliberately — `/privacy/` promises none, and
-both App Store listings point at that page. So none of the above can be
-evaluated by traffic. LinkedIn and Reddit will show you their own engagement
-numbers for your posts, which is something, but you will not know what any of
-it did to the site. That's a deliberate trade, not an oversight. See #7.
+None of the channels above can be evaluated by traffic. Search Console covers
+Google search and nothing else, so a forum reply, a LinkedIn post, or a link
+pasted into a Slack all land completely unmeasured. LinkedIn and Reddit report
+their own engagement numbers, which is something, but you will not learn what
+any of it did to the site.
+
+That's a deliberate trade rather than an oversight — see "Measurement, and its
+limits" above.
