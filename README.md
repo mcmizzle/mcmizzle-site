@@ -80,11 +80,17 @@ both on. All four of those matter: a 302 tells search engines to keep
 indexing `.net` instead of consolidating onto `.com`, and without the path
 option a deep link lands on the homepage.
 
-The blog is written and audited by two scheduled cloud agents (Mondays and
-the 1st of the month). Neither publishes — both open PRs a human merges. The
-rules they follow live in `blog/README.md`, not in the prompts, so that file
-is how you change their behavior. Their IDs are recorded outside this repo;
-see <https://claude.ai/code/routines>.
+The blog is written and audited by two scheduled cloud agents — a writer on
+Mondays and an auditor on the 15th. Neither publishes; both open PRs a human
+merges. The rules they follow live in `blog/README.md`, not in the prompts,
+so that file is how you change their behavior. Their IDs are recorded outside
+this repo; see <https://claude.ai/code/routines>.
+
+Each skips its run if a PR of *its own kind* is already open — the writer on
+`blog/…`, the auditor on `audit/…` — so work doesn't pile up unreviewed.
+Neither blocks on the other, or on an ordinary site-change PR. Those branch
+prefixes are load-bearing: put a post on some other branch name and the guard
+stops working. See "The agents" in `blog/README.md`.
 
 Google Search Console is set up for the domain (verified by DNS TXT, so
 nothing was added to the site). It reports index status and search queries —
