@@ -33,6 +33,16 @@ Every post section needs the URL on its own line in backticks, and a
 `### LinkedIn` block. Forum-reply blocks are ignored — those get posted by
 hand into a specific thread and make no sense in a scheduler.
 
+## Dates
+
+Each item's `pubDate` is the post's real publication date, read out of
+`blog/feed.xml` and matched on URL. It must not be "when this file was last
+generated": every new post rewrites `SOCIAL.md`, and if that re-dated every
+item, a consumer that decides what is new by date would re-queue the entire
+back catalogue. Zapier dedupes on `<guid>` and would probably survive that,
+but "probably" is a poor guarantee when the failure mode is a queue full of
+duplicate posts to someone's professional network.
+
 ## Already-posted items
 
 Nothing is removed once published. Schedulers dedupe on `<guid>`, which is
@@ -43,10 +53,8 @@ a scheduler ever reset its state.
 
 import pathlib
 import re
-import subprocess
 import sys
-from email.utils import format_datetime
-from datetime import datetime, timezone
+import xml.dom.minidom as minidom
 
 BASE = "https://mcmizzle.com"
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -54,16 +62,25 @@ SOURCE = ROOT / "blog" / "SOCIAL.md"
 OUT = ROOT / "blog" / "social.xml"
 
 
-def commit_datetime(path):
-    """Last commit time of the source file, so pubDate isn't 'now' on rebuild."""
-    try:
-        out = subprocess.run(
-            ["git", "log", "-1", "--format=%cI", "--", str(path)],
-            cwd=ROOT, capture_output=True, text=True, check=True,
-        ).stdout.strip()
-        return datetime.fromisoformat(out) if out else None
-    except (subprocess.CalledProcessError, FileNotFoundError, ValueError):
-        return None
+def blog_pubdates():
+    """{post url: RFC-822 pubDate} from blog/feed.xml.
+
+    The blog feed is the authority on when a post was published, so the two
+    feeds can never disagree about a date.
+    """
+    feed = ROOT / "blog" / "feed.xml"
+    if not feed.exists():
+        return {}
+    dom = minidom.parse(str(feed))
+    dates = {}
+    for item in dom.getElementsByTagName("item"):
+        try:
+            link = item.getElementsByTagName("link")[0].firstChild.data.strip()
+            pub = item.getElementsByTagName("pubDate")[0].firstChild.data.strip()
+        except (IndexError, AttributeError):
+            continue
+        dates[link.rstrip("/") + "/"] = pub
+    return dates
 
 
 def parse(md):
@@ -99,8 +116,14 @@ def main():
     if not items:
         sys.exit("no LinkedIn copy found in SOCIAL.md — refusing to write an empty feed")
 
-    stamp = commit_datetime(SOURCE) or datetime(2026, 1, 1, tzinfo=timezone.utc)
-    pub = format_datetime(stamp)
+    dates = blog_pubdates()
+    missing = [u for _, u, _ in items if u.rstrip("/") + "/" not in dates]
+    if missing:
+        sys.exit(
+            "no pubDate in blog/feed.xml for:\n  "
+            + "\n  ".join(missing)
+            + "\nAdd the post's feed item first — the two feeds must agree on dates."
+        )
 
     lines = [
         '<?xml version="1.0" encoding="UTF-8"?>',
@@ -123,7 +146,7 @@ def main():
             f"      <title><![CDATA[{title}]]></title>",
             f"      <link>{url}</link>",
             f'      <guid isPermaLink="true">{url}</guid>',
-            f"      <pubDate>{pub}</pubDate>",
+            f'      <pubDate>{dates[url.rstrip("/") + "/"]}</pubDate>',
             # The copy lives in both fields because schedulers disagree about
             # which one they read. CDATA keeps the paragraph breaks intact —
             # LinkedIn honours them and the copy is written expecting them.
@@ -138,7 +161,7 @@ def main():
     print(f"wrote {OUT.relative_to(ROOT)} — {len(items)} item(s)")
     for title, url, copy in items:
         words = len(copy.split())
-        print(f"  {words:4d} words  {title[:52]}")
+        print(f"  {dates[url.rstrip('/') + '/'][:16]}  {words:4d} words  {title[:44]}")
     return 0
 
 
